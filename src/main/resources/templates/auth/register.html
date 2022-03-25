@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>회원가입</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <meta name="theme-color" content="#7952b3">
+
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .form-signin {
+            width: 100%;
+            max-width: 330px;
+            padding: 15px;
+            margin: auto;
+        }
+
+        .form-signin .checkbox {
+            font-weight: 400;
+        }
+
+        .form-signin .form-floating:focus-within {
+            z-index: 2;
+        }
+
+        .form-signin input,select{
+            margin-bottom: 10px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+    </style>
+
+</head>
+<body class="text-center">
+<main class="form-signin">
+    <form method="post" enctype="multipart/form-data">
+      <img class="mb-4" src="/img/emblem.png" alt="" width="80" height="80">
+
+        <div class="form-floating">
+            <input type="text" class="form-control" id="floatingName" placeholder="홍길동">
+            <label for="floatingName">이름</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" id="floatingId" placeholder="아이디">
+            <label for="floatingId">아이디</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="password">
+            <label for="floatingPassword">비밀번호</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPasswordConfirm" placeholder="password">
+            <label for="floatingPasswordConfirm">비밀번호 확인</label>
+        </div>
+        <div class="form-floating">
+            <select name="department" class="form-control" id="departSelect">
+                <option value="none">학과를 선택해주세요.</option>
+                <optgroup label="기계공학부">
+                    <option value="기계과">기계공학과</option>
+                    <option value="기설과">기계설계공학과</option>
+                    <option value="메카과">메카트로닉스공학과</option>
+                </optgroup>
+                <optgroup label="수송기계학부">
+                    <option value="조선과">조선기계공학과</option>
+                    <option value="항공기계과">항공기계공학과</option>
+                    <option value="자동차과">자동차공학과</option>
+                </optgroup>
+                <optgroup label="정보산업공학부">
+                    <option value="전기과">전기공학과</option>
+                    <option value="전자과">전자공학과</option>
+                    <option value="정통과">정보통신공학과</option>
+                </optgroup>
+                <optgroup label="컴퓨터정보공학부">
+                    <option value="컴정과">컴퓨터정보과</option>
+                    <option value="컴시과">컴퓨터시스템과</option>
+                </optgroup>
+                <optgroup label="지구환경공학부">
+                    <option value="건설과">건설환경공학과</option>
+                    <option value="공간정보과">공간정보빅데이터과</option>
+                </optgroup>
+                <optgroup label="건축학부">
+                    <option value="건축과">건축학과</option>
+                    <option value="실건과">실내건축학과</option>
+                </optgroup>
+                <optgroup label="신소재공학부">
+                    <option value="화학과">화학생명공학과</option>
+                    <option value="재료과">재료공학과</option>
+                </optgroup>
+                <optgroup label="서비스학부">
+                    <option value="항운과">항공운항과</option>
+                    <option value="항경과">항공경영학과</option>
+                    <option value="관광과">관광경영학과</option>
+                    <option value="비서과">비서학과</option>
+                    <option value="호경과">호텔경영학과</option>
+                </optgroup>
+                <optgroup label="디자인학부">
+                    <option value="산디과">산업디자인학과</option>
+                    <option value="패션과">패션디자인학과</option>
+                </optgroup>
+                <optgroup label="계약학과">
+                    <option value="스마트기설과">스마트기계설계과</option>
+                    <option value="스마트자동차과">첨단스마트자동차과</option>
+                </optgroup>
+            </select>
+            <label for="departSelect">학과</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" id="floatingPhone" placeholder="010-1234-5678">
+            <label for="floatingPhone">전화번호</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" id="floatingAddress" placeholder="인천시 미추홀구">
+            <label for="floatingAddress">주소</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" id="floatingEmail" placeholder="user@email.com">
+            <label for="floatingEmail">이메일</label>
+        </div>
+        <div class="form-floating">
+            <input type="file" name="FileName">
+        </div>
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="remember-me"> 자동 로그인
+            </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">회원가입</button>
+    </form>
+</main>
+</body>
+</html>
