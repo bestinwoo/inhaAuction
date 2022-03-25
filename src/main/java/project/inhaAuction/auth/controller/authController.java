@@ -10,4 +10,8 @@ public class authController {
     public String register() {
         return "auth/register";
     }
+    @RequestMapping(value = "login", method = RequestMethod.GET)
+    public String login() {
+        return "auth/login";
+    }
 }
