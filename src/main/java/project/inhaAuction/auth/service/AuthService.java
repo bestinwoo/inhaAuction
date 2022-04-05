@@ -1,12 +1,16 @@
 package project.inhaAuction.auth.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.inhaAuction.auth.domain.Member;
-import project.inhaAuction.auth.dto.AuthRequest;
+import project.inhaAuction.auth.dto.LoginDto;
+import project.inhaAuction.auth.dto.RegisterDto;
+import project.inhaAuction.auth.dto.TokenDto;
 import project.inhaAuction.auth.repository.MemberRepository;
 import project.inhaAuction.jwt.TokenProvider;
 
@@ -19,7 +23,7 @@ public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
-    public boolean join(AuthRequest authRequest) {
+    public boolean join(RegisterDto authRequest) {
         Member member = authRequest.toMember(passwordEncoder);
         if(validateDuplicateMember(member)) {
             return false;
@@ -44,4 +48,26 @@ public class AuthService {
         }
         return false;
     }
+
+    @Transactional
+    public TokenDto login(LoginDto authRequest) {
+        UsernamePasswordAuthenticationToken authenticationToken = authRequest.toAuthentication();
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+
+       /* RefreshToken refreshToken = RefreshToken.builder()
+                .email(authentication.getName())
+                .token(tokenDto.getRefreshToken())
+                .build();
+
+        Optional<RefreshToken> oldRefreshToken = refreshTokenMapper.findByEmail(authRequest.getEmail());
+
+        oldRefreshToken.ifPresentOrElse(m -> refreshTokenMapper.update(refreshToken), () -> refreshTokenMapper.save(refreshToken));
+*/
+        return tokenDto;
+    }
+
+
 }
