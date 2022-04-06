@@ -2,6 +2,7 @@ package project.inhaAuction.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -12,7 +13,10 @@ import project.inhaAuction.auth.domain.Member;
 import project.inhaAuction.auth.dto.LoginDto;
 import project.inhaAuction.auth.dto.RegisterDto;
 import project.inhaAuction.auth.dto.TokenDto;
+import project.inhaAuction.auth.dto.TokenRequestDto;
 import project.inhaAuction.auth.repository.MemberRepository;
+import project.inhaAuction.common.BasicResponse;
+import project.inhaAuction.common.Result;
 import project.inhaAuction.jwt.TokenProvider;
 
 import java.util.concurrent.TimeUnit;
@@ -64,16 +68,35 @@ public class AuthService {
         redisTemplate.opsForValue()
                 .set("RefreshToken:" + authentication.getName(), tokenDto.getRefreshToken(),
                         tokenDto.getRefreshTokenExpiresIn(), TimeUnit.MILLISECONDS);
-       /* RefreshToken refreshToken = RefreshToken.builder()
-                .email(authentication.getName())
-                .token(tokenDto.getRefreshToken())
-                .build();
 
-        Optional<RefreshToken> oldRefreshToken = refreshTokenMapper.findByEmail(authRequest.getEmail());
-
-        oldRefreshToken.ifPresentOrElse(m -> refreshTokenMapper.update(refreshToken), () -> refreshTokenMapper.save(refreshToken));
-*/
         return tokenDto;
+    }
+
+    @Transactional
+    public ResponseEntity<?> reissue(TokenRequestDto tokenRequestDto) {
+        if (!tokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
+            return ResponseEntity.badRequest().body("Refresh Token이 유효하지 않습니다.");
+            //throw new IllegalStateException("Refresh Token이 유효하지 않습니다.");
+        }
+
+        Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
+
+        //Redis에서 Refresh Token 가져오기
+        String refreshToken = (String) redisTemplate.opsForValue().get("RefreshToken:" + authentication.getName());
+        if(!refreshToken.equals(tokenRequestDto.getRefreshToken())) {
+            return ResponseEntity.badRequest().body("토큰의 유저 정보가 일치하지 않습니다.");
+        }
+
+        //RefreshToken refreshToken = refreshTokenMapper.findByEmail(authentication.getName())
+       //         .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+
+        redisTemplate.opsForValue()
+                .set("RefreshToken:" + authentication.getName(), tokenDto.getRefreshToken(),
+                        tokenDto.getRefreshTokenExpiresIn(), TimeUnit.MILLISECONDS);
+
+        return ResponseEntity.ok(new Result<>(tokenDto));
     }
 
 

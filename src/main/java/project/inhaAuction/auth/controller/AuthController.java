@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.inhaAuction.auth.dto.LoginDto;
 import project.inhaAuction.auth.dto.RegisterDto;
 import project.inhaAuction.auth.dto.TokenDto;
+import project.inhaAuction.auth.dto.TokenRequestDto;
 import project.inhaAuction.auth.service.AuthService;
 import project.inhaAuction.common.BasicResponse;
 import project.inhaAuction.common.ErrorResponse;
@@ -35,4 +36,8 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(authRequest));
     }
 
+    @PostMapping("/reissue")
+    public ResponseEntity<?> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
+        return authService.reissue(tokenRequestDto);
+    }
 }
