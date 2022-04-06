@@ -1,6 +1,7 @@
 package project.inhaAuction.auth.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -14,12 +15,15 @@ import project.inhaAuction.auth.dto.TokenDto;
 import project.inhaAuction.auth.repository.MemberRepository;
 import project.inhaAuction.jwt.TokenProvider;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
@@ -57,6 +61,9 @@ public class AuthService {
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
+        redisTemplate.opsForValue()
+                .set("RefreshToken:" + authentication.getName(), tokenDto.getRefreshToken(),
+                        tokenDto.getRefreshTokenExpiresIn(), TimeUnit.MILLISECONDS);
        /* RefreshToken refreshToken = RefreshToken.builder()
                 .email(authentication.getName())
                 .token(tokenDto.getRefreshToken())
