@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import project.inhaAuction.auth.domain.Member;
 import project.inhaAuction.auth.dto.LoginDto;
 import project.inhaAuction.auth.dto.RegisterDto;
@@ -19,6 +20,8 @@ import project.inhaAuction.common.BasicResponse;
 import project.inhaAuction.common.Result;
 import project.inhaAuction.jwt.TokenProvider;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -31,13 +34,17 @@ public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
-    public boolean join(RegisterDto authRequest) {
+    public boolean join(RegisterDto authRequest) throws IOException {
         Member member = authRequest.toMember(passwordEncoder);
         if(validateDuplicateMember(member)) {
             return false;
         }
 
         memberRepository.save(member);
+
+        MultipartFile image = authRequest.getImage();
+        image.transferTo(new File("auth", "member-" + member.getId().toString() + ".png"));
+
         return true;
     }
 

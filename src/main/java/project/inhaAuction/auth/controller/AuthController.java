@@ -3,10 +3,7 @@ package project.inhaAuction.auth.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.inhaAuction.auth.dto.LoginDto;
 import project.inhaAuction.auth.dto.RegisterDto;
 import project.inhaAuction.auth.dto.TokenDto;
@@ -16,6 +13,8 @@ import project.inhaAuction.common.BasicResponse;
 import project.inhaAuction.common.ErrorResponse;
 import project.inhaAuction.common.Result;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
@@ -23,7 +22,10 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<BasicResponse> register(@RequestBody RegisterDto authRequest) {
+    public ResponseEntity<BasicResponse> register(@ModelAttribute RegisterDto authRequest) throws IOException {
+        if(authRequest.getImage() == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("학생 인증 파일이 필요합니다.", "403"));
+        }
         if(authService.join(authRequest)) {
             return ResponseEntity.status(HttpStatus.CREATED).body(new Result<>("회원가입이 완료되었습니다."));
         } else {
