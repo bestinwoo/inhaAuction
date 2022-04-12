@@ -33,7 +33,7 @@ public class AuthService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean join(RegisterDto authRequest) throws IOException {
         Member member = authRequest.toMember(passwordEncoder);
         if(validateDuplicateMember(member)) {
@@ -64,7 +64,7 @@ public class AuthService {
         return false;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public TokenDto login(LoginDto authRequest) {
         UsernamePasswordAuthenticationToken authenticationToken = authRequest.toAuthentication();
 
@@ -79,7 +79,7 @@ public class AuthService {
         return tokenDto;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> reissue(TokenRequestDto tokenRequestDto) {
         if (!tokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
             return ResponseEntity.badRequest().body("Refresh Token이 유효하지 않습니다.");

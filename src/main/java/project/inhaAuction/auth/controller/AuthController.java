@@ -15,6 +15,7 @@ import project.inhaAuction.common.Result;
 
 import java.io.IOException;
 
+@CrossOrigin()
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
