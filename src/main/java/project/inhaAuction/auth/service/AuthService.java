@@ -22,6 +22,7 @@ import project.inhaAuction.jwt.TokenProvider;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -74,7 +75,7 @@ public class AuthService {
 
         redisTemplate.opsForValue()
                 .set("RefreshToken:" + authentication.getName(), tokenDto.getRefreshToken(),
-                        tokenDto.getRefreshTokenExpiresIn(), TimeUnit.MILLISECONDS); //TODO: 이거 시간 뭔가 단단히 잘못들어가고 있음.
+                        tokenDto.getRefreshTokenExpiresIn() - new Date().getTime(), TimeUnit.MILLISECONDS);
 
         return tokenDto;
     }
@@ -101,7 +102,7 @@ public class AuthService {
 
         redisTemplate.opsForValue()
                 .set("RefreshToken:" + authentication.getName(), tokenDto.getRefreshToken(),
-                        tokenDto.getRefreshTokenExpiresIn(), TimeUnit.MILLISECONDS);
+                        tokenDto.getRefreshTokenExpiresIn() - new Date().getTime(), TimeUnit.MILLISECONDS);
 
         return ResponseEntity.ok(new Result<>(tokenDto));
     }
