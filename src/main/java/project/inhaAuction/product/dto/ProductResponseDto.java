@@ -19,7 +19,6 @@ public class ProductResponseDto {
     private Long bidUnit;
     private Long sellerId;
     private Long bidderCnt;
-    private Long currentPrice;
 
   /*  public Product toProduct() {
         return Product.builder()

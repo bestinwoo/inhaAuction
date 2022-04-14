@@ -40,7 +40,6 @@ public class ProductRequestDto {
                 .seller(Member.builder()
                         .id(sellerId)
                         .build())
-                .currentPrice(startPrice)
                 .build();
     }
 }

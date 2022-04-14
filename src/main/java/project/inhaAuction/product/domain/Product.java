@@ -33,7 +33,7 @@ public class Product {
     private Long instantPrice;
     //경매 종료일
     private LocalDateTime endDate;
-    //입찰 단위
+    //최소 입찰 단위
     private Long bidUnit;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,8 +42,6 @@ public class Product {
 
     //입찰 수
     private Long bidderCnt;
-    //현재가
-    private Long currentPrice;
 
 
 }
