@@ -11,6 +11,7 @@ import project.inhaAuction.common.Result;
 import project.inhaAuction.product.dto.ProductRequestDto;
 import project.inhaAuction.product.service.ProductService;
 
+import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
-    @GetMapping("/categorys")
+    @GetMapping("/categories") //TODO: 카테고리 이름으로 검색 추가?
     public ResponseEntity<?> getCategoryList() {
         return ResponseEntity.ok(productService.getCategoryList());
     }
@@ -33,4 +34,12 @@ public class ProductController {
             return ResponseEntity.badRequest().body(new ErrorResponse("상품 사진 업로드 실패", "403"));
         }
     }
+
+    @GetMapping()
+    public ResponseEntity<BasicResponse> getProducts(@RequestParam(required = false) String keyword, @RequestParam(required = false) String categoryName,
+                                                     @RequestParam int page, @RequestParam int per_page, @RequestParam String sort) {
+        return ResponseEntity.ok(new Result<>(productService.getProductList(keyword, categoryName, page, per_page, sort),
+                productService.getProductCount(keyword, categoryName, page, per_page)));
+    }
+
 }

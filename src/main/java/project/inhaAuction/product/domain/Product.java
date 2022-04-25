@@ -33,6 +33,8 @@ public class Product {
     private Long instantPrice;
     //경매 종료일
     private LocalDateTime endDate;
+    //상품 등록일
+    private LocalDateTime startDate;
     //최소 입찰 단위
     private Long bidUnit;
 

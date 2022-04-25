@@ -20,4 +20,9 @@ public class Result<T> implements BasicResponse {
             this.count = 1;
         }
     }
+
+    public Result(T data, int count) {
+        this.data = data;
+        this.count = count;
+    }
 }

@@ -15,6 +15,7 @@ public class ProductResponseDto {
     private Long categoryId;
     private String content;
     private Long instantPrice;
+    private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Long bidUnit;
     private Long sellerId;

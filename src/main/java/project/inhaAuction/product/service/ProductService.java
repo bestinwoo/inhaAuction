@@ -36,8 +36,31 @@ public class ProductService {
             multipartFile.transferTo(new File("product", "product-" + product.getId().toString() + "-" + multipartFiles.indexOf(multipartFile) + ".png"));
         }
 
-
         return toProductDto(product);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponseDto> getProductList(String keyword, String categoryName, int page, int per_page, String sort) {
+        List<Product> products;
+      /*  if(keyword == null && categoryName == null) {
+            products = productRepository.findAll(page, per_page, sort);
+        } else if(keyword == null) {
+            products = productRepository.findByCategoryName(categoryName, page, per_page, sort);
+        } else {
+            products = productRepository.findByKeyword(keyword, page, per_page, sort);
+        }*/
+        if (keyword != null) {
+            keyword = "%" + keyword + "%";
+        }
+        products = productRepository.findByCategoryAndKeyword(keyword, categoryName, page, per_page, sort);
+
+        List<ProductResponseDto> result = products.stream().map(this::toProductDto).collect(Collectors.toList());
+
+        return result;
+    }
+
+    public Integer getProductCount(String keyword, String categoryName, int page, int per_page) {
+        return productRepository.getProductCount(keyword, categoryName, page, per_page);
     }
 
     private ProductResponseDto toProductDto(final Product product) {
@@ -50,9 +73,9 @@ public class ProductService {
                 .instantPrice(product.getInstantPrice())
                 .endDate(product.getEndDate())
                 .bidUnit(product.getBidUnit())
+                .startDate(product.getStartDate())
                 .sellerId(product.getSeller().getId())
                 .bidderCnt(product.getBidderCnt())
-                .currentPrice(product.getCurrentPrice())
                 .build();
     }
 }
