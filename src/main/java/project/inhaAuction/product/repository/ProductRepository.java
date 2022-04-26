@@ -41,7 +41,7 @@ public class ProductRepository {
                 .getResultList();
         return products;
     }*/
-
+    //TODO: 정렬 구현
     public List<Product> findByCategoryAndKeyword(String keyword, String categoryName, int page, int per_page, String sort) {
         return em.createQuery("select p from Product p where (:keyword is null or p.name like :keyword)" +
                         " and (:categoryName is null or p.category.name like :categoryName)", Product.class)
@@ -59,5 +59,10 @@ public class ProductRepository {
                 .setParameter("categoryName", categoryName)
                 .getSingleResult()
                 .toString());
+    }
+
+    public void deleteById(Long id) {
+        Product product = em.find(Product.class, id);
+        em.remove(product);
     }
 }

@@ -59,8 +59,14 @@ public class ProductService {
         return result;
     }
 
+    @Transactional(readOnly = true)
     public Integer getProductCount(String keyword, String categoryName, int page, int per_page) {
         return productRepository.getProductCount(keyword, categoryName, page, per_page);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
     }
 
     private ProductResponseDto toProductDto(final Product product) {
