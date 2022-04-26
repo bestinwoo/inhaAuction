@@ -45,7 +45,7 @@ public class ProductController {
                 productService.getProductCount(keyword, categoryName, page, per_page)));
     }
 
-    //상품 삭제
+    //상품 삭제 TODO: 삭제 예외처리, 입찰자가 있는 상품일 경우 외래키 처리
     @DeleteMapping("/{id}")
     public ResponseEntity<BasicResponse> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);

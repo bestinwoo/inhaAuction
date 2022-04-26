@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import project.inhaAuction.auth.domain.Member;
-import project.inhaAuction.auth.dto.LoginDto;
-import project.inhaAuction.auth.dto.RegisterDto;
-import project.inhaAuction.auth.dto.TokenDto;
-import project.inhaAuction.auth.dto.TokenRequestDto;
+import project.inhaAuction.auth.dto.*;
 import project.inhaAuction.auth.repository.MemberRepository;
 import project.inhaAuction.common.BasicResponse;
 import project.inhaAuction.common.Result;
@@ -23,6 +20,7 @@ import project.inhaAuction.jwt.TokenProvider;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -56,13 +54,19 @@ public class AuthService {
                 throw new IllegalStateException("이미 가입된 이메일입니다.");
             });
 
-            memberRepository.findByloginId(member.getLoginId()).ifPresent(m -> {
+            memberRepository.findByLoginId(member.getLoginId()).ifPresent(m -> {
                 throw new IllegalStateException("이미 가입된 아이디입니다.");
             });
         } catch(IllegalStateException e) {
             return true;
         }
         return false;
+    }
+
+    @Transactional(readOnly = true)
+    public MemberDto getMemberInfo(String loginId) {
+        Optional<Member> member = memberRepository.findByLoginId(loginId);
+        return member.map(MemberDto::of).get();
     }
 
     @Transactional(rollbackFor = Exception.class)

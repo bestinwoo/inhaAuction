@@ -42,13 +42,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponseDto> getProductList(String keyword, String categoryName, int page, int per_page, String sort) {
         List<Product> products;
-      /*  if(keyword == null && categoryName == null) {
-            products = productRepository.findAll(page, per_page, sort);
-        } else if(keyword == null) {
-            products = productRepository.findByCategoryName(categoryName, page, per_page, sort);
-        } else {
-            products = productRepository.findByKeyword(keyword, page, per_page, sort);
-        }*/
+
         if (keyword != null) {
             keyword = "%" + keyword + "%";
         }

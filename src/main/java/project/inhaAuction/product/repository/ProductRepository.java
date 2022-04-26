@@ -17,30 +17,6 @@ public class ProductRepository {
         return product;
     }
 
-   /* public List<Product> findAll(int page, int per_page, String sort) {
-        return em.createQuery("select p from Product p", Product.class)
-                .setFirstResult(page)
-                .setMaxResults(per_page)
-                .getResultList();
-    }
-
-    public List<Product> findByCategoryName(String name, int page, int per_page, String sort) {
-        return em.createQuery("select p from Product p where p.category.name = :name", Product.class)
-                .setParameter("name", name)
-                .setFirstResult(page)
-                .setMaxResults(per_page)
-                .getResultList();
-    }
-    //keyword, categoryId, sort, page, per_page
-
-    public List<Product> findByKeyword(String keyword, int page, int per_page, String sort) {
-        List<Product> products = em.createQuery("select p from Product p where p.name like :keyword", Product.class)
-                .setParameter("keyword", "%" + keyword + "%")
-                .setFirstResult(page)
-                .setMaxResults(per_page)
-                .getResultList();
-        return products;
-    }*/
     //TODO: 정렬 구현
     public List<Product> findByCategoryAndKeyword(String keyword, String categoryName, int page, int per_page, String sort) {
         return em.createQuery("select p from Product p where (:keyword is null or p.name like :keyword)" +

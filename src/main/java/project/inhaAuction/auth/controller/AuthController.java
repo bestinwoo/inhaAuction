@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import project.inhaAuction.auth.dto.LoginDto;
-import project.inhaAuction.auth.dto.RegisterDto;
-import project.inhaAuction.auth.dto.TokenDto;
-import project.inhaAuction.auth.dto.TokenRequestDto;
+import project.inhaAuction.auth.dto.*;
 import project.inhaAuction.auth.service.AuthService;
 import project.inhaAuction.common.BasicResponse;
 import project.inhaAuction.common.ErrorResponse;
@@ -42,5 +39,15 @@ public class AuthController {
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
         return authService.reissue(tokenRequestDto);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BasicResponse> getMemberInfo(@PathVariable String id) {
+        MemberDto memberInfo = authService.getMemberInfo(id);
+        if(memberInfo == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("회원 정보를 찾을 수 없습니다."));
+        } else {
+            return ResponseEntity.ok(new Result<>(memberInfo));
+        }
     }
 }

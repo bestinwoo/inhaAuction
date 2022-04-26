@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return memberRepository.findByloginId(username).map(this::createUserDetails)
+        return memberRepository.findByLoginId(username).map(this::createUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException(username + "는 데이터베이스에 없는 데이터입니다."));
     }
 

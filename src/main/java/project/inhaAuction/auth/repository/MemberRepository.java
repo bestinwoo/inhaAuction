@@ -31,7 +31,7 @@ public class MemberRepository {
         return members.stream().findAny();
     }
 
-    public Optional<Member> findByloginId(String loginId) {
+    public Optional<Member> findByLoginId(String loginId) {
         List<Member> members = em.createQuery("select m from Member m where m.loginId = :loginId", Member.class)
                 .setParameter("loginId", loginId)
                 .getResultList();
