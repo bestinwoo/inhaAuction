@@ -6,6 +6,7 @@ import project.inhaAuction.product.domain.Product;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -35,6 +36,11 @@ public class ProductRepository {
                 .setParameter("categoryName", categoryName)
                 .getSingleResult()
                 .toString());
+    }
+
+    public Optional<Product> getProductDetail(Long id) {
+        Product product = em.find(Product.class, id);
+        return Optional.ofNullable(product);
     }
 
     public void deleteById(Long id) {

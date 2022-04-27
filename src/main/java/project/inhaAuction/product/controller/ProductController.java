@@ -52,5 +52,12 @@ public class ProductController {
     }
 
     //상품 상세
-
+    @GetMapping("/{id}")
+    public ResponseEntity<BasicResponse> getProductDetail(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(new Result<>(productService.getProductDetail(id)));
+        } catch(IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
+        }
+    }
 }

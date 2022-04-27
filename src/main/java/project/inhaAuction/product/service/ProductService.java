@@ -13,6 +13,7 @@ import project.inhaAuction.product.repository.ProductRepository;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,6 +61,13 @@ public class ProductService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductDto.Detail getProductDetail(Long id) throws IllegalStateException {
+        Product product = productRepository.getProductDetail(id).orElseThrow(() -> new IllegalStateException("상품을 찾을 수 없습니다."));
+
+        return toProductDetail(product);
     }
 
     private ProductDto.Summary toProductSummary(final Product product) {
