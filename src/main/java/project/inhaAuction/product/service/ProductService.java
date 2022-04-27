@@ -6,8 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import project.inhaAuction.product.domain.Product;
 import project.inhaAuction.product.dto.CategoryResultDto;
-import project.inhaAuction.product.dto.ProductResponseDto;
-import project.inhaAuction.product.dto.ProductRequestDto;
+import project.inhaAuction.product.dto.ProductDto;
 import project.inhaAuction.product.repository.CategoryRepository;
 import project.inhaAuction.product.repository.ProductRepository;
 
@@ -28,19 +27,19 @@ public class ProductService {
         return results;
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public ProductResponseDto addProduct(ProductRequestDto productDto, List<MultipartFile> multipartFiles) throws IOException {
+    @Transactional(rollbackFor = Exception.class) //TODO: 확장자 체크
+    public ProductDto.Detail addProduct(ProductDto.Request productDto, List<MultipartFile> multipartFiles) throws IOException {
         Product product = productDto.toProduct();
         productRepository.save(product);
         for (MultipartFile multipartFile : multipartFiles) {
             multipartFile.transferTo(new File("product", "product-" + product.getId().toString() + "-" + multipartFiles.indexOf(multipartFile) + ".png"));
         }
 
-        return toProductDto(product);
+        return toProductDetail(product);
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getProductList(String keyword, String categoryName, int page, int per_page, String sort) {
+    public List<ProductDto.Summary> getProductList(String keyword, String categoryName, int page, int per_page, String sort) {
         List<Product> products;
 
         if (keyword != null) {
@@ -48,7 +47,7 @@ public class ProductService {
         }
         products = productRepository.findByCategoryAndKeyword(keyword, categoryName, page, per_page, sort);
 
-        List<ProductResponseDto> result = products.stream().map(this::toProductDto).collect(Collectors.toList());
+        List<ProductDto.Summary> result = products.stream().map(this::toProductSummary).collect(Collectors.toList());
 
         return result;
     }
@@ -63,8 +62,20 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    private ProductResponseDto toProductDto(final Product product) {
-        return ProductResponseDto.builder()
+    private ProductDto.Summary toProductSummary(final Product product) {
+        return ProductDto.Summary.builder()
+                .id(product.getId())
+                .instantPrice(product.getInstantPrice())
+                .endDate(product.getEndDate())
+                .name(product.getName())
+                .bidderCnt(product.getBidderCnt())
+                .startPrice(product.getStartPrice())
+                .sellerId(product.getSeller().getLoginId())
+                .build();
+    }
+
+    private ProductDto.Detail toProductDetail(final Product product) {
+        return ProductDto.Detail.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .startPrice(product.getStartPrice())
@@ -74,7 +85,7 @@ public class ProductService {
                 .endDate(product.getEndDate())
                 .bidUnit(product.getBidUnit())
                 .startDate(product.getStartDate())
-                .sellerId(product.getSeller().getId())
+                .sellerId(product.getSeller().getLoginId())
                 .bidderCnt(product.getBidderCnt())
                 .build();
     }

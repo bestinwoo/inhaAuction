@@ -8,10 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 import project.inhaAuction.common.BasicResponse;
 import project.inhaAuction.common.ErrorResponse;
 import project.inhaAuction.common.Result;
-import project.inhaAuction.product.dto.ProductRequestDto;
+import project.inhaAuction.product.dto.ProductDto;
 import project.inhaAuction.product.service.ProductService;
 
-import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class ProductController {
 
     //상품 등록
     @PostMapping
-    public ResponseEntity<BasicResponse> addProduct(@ModelAttribute ProductRequestDto product, @ModelAttribute List<MultipartFile> files) {
+    public ResponseEntity<BasicResponse> addProduct(@ModelAttribute ProductDto.Request product, @ModelAttribute List<MultipartFile> files) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(new Result<>(productService.addProduct(product, files)));
         } catch (IOException e) {
@@ -51,5 +50,7 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.ok(new Result<>("삭제 완료"));
     }
+
+    //상품 상세
 
 }
