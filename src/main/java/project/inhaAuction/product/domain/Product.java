@@ -45,5 +45,8 @@ public class Product {
     //입찰 수
     private Long bidderCnt;
 
+    //이미지 개수
+    private Long imgCnt;
+
 
 }

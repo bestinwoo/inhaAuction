@@ -27,6 +27,7 @@ public class ProductDto {
         private Long bidUnit;
         private String sellerId;
         private Long bidderCnt;
+        private Long imgCnt;
     }
 
     @Getter
@@ -40,6 +41,7 @@ public class ProductDto {
         private LocalDateTime endDate;
         private String sellerId;
         private Long bidderCnt;
+        private Long imgCnt;
     }
 
     @Getter
@@ -55,6 +57,7 @@ public class ProductDto {
         private LocalDateTime endDate;
         private Long bidUnit;
         private Long sellerId;
+        private Long imgCnt;
 
         public Product toProduct() {
             return Product.builder()
@@ -70,6 +73,7 @@ public class ProductDto {
                     .seller(Member.builder()
                             .id(sellerId)
                             .build())
+                    .imgCnt(imgCnt)
                     .build();
         }
     }
