@@ -11,5 +11,6 @@ public class TokenDto {
     private Long accessTokenExpiresIn;
     private Long refreshTokenExpiresIn;
     private String refreshToken;
+    private Long memberId;
 }
 

@@ -36,7 +36,7 @@ public class ProductController {
         }
     }
 
-    //상품 목록 조회(검색어, 카테고리명) TODO: 상품 이미지 처리
+    //상품 목록 조회(검색어, 카테고리명)
     @GetMapping()
     public ResponseEntity<BasicResponse> getProducts(@RequestParam(required = false) String keyword, @RequestParam(required = false) String categoryName,
                                                      @RequestParam int page, @RequestParam int per_page, @RequestParam String sort) {
@@ -51,7 +51,7 @@ public class ProductController {
         return ResponseEntity.ok(new Result<>("삭제 완료"));
     }
 
-    //상품 상세 TODO: 상품 이미지 처리
+    //상품 상세
     @GetMapping("/{id}")
     public ResponseEntity<BasicResponse> getProductDetail(@PathVariable Long id) {
         try {
@@ -60,4 +60,5 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
         }
     }
+
 }

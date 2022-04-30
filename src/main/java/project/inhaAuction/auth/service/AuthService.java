@@ -76,7 +76,7 @@ public class AuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
-
+        tokenDto.setMemberId(getMemberInfo(authRequest.getId()).getId());
         redisTemplate.opsForValue()
                 .set("RefreshToken:" + authentication.getName(), tokenDto.getRefreshToken(),
                         tokenDto.getRefreshTokenExpiresIn() - new Date().getTime(), TimeUnit.MILLISECONDS);

@@ -30,7 +30,9 @@ public class ProductService {
 
     @Transactional(rollbackFor = Exception.class) //TODO: 확장자 체크
     public ProductDto.Detail addProduct(ProductDto.Request productDto, List<MultipartFile> multipartFiles) throws IOException {
-        productDto.setImgCnt(multipartFiles.size() + 0L);
+        if(multipartFiles != null) {
+            productDto.setImgCnt(multipartFiles.size() + 0L);
+        }
         Product product = productDto.toProduct();
         productRepository.save(product);
         for (MultipartFile multipartFile : multipartFiles) {
