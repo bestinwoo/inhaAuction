@@ -17,14 +17,13 @@ public class ProductRepository {
         em.persist(product);
         return product;
     }
-
-    //TODO: 정렬 구현
-    public List<Product> findByCategoryAndKeyword(String keyword, String categoryName, int page, int per_page, String sort) {
+    
+    public List<Product> findByCategoryAndKeyword(String keyword, String categoryName, int page, int per_page) {
         return em.createQuery("select p from Product p where (:keyword is null or p.name like :keyword)" +
                         " and (:categoryName is null or p.category.name like :categoryName)", Product.class)
                 .setParameter("keyword", keyword)
                 .setParameter("categoryName", categoryName)
-                .setFirstResult(page)
+                .setFirstResult((page - 1) * per_page)
                 .setMaxResults(per_page)
                 .getResultList();
     }
