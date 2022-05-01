@@ -29,10 +29,12 @@ public class ProductService {
     }
 
     @Transactional(rollbackFor = Exception.class) //TODO: 확장자 체크
-    public ProductDto.Detail addProduct(ProductDto.Request productDto, List<MultipartFile> multipartFiles) throws IOException {
-        if(multipartFiles != null) {
-            productDto.setImgCnt(multipartFiles.size() + 0L);
+    public ProductDto.Detail addProduct(ProductDto.Request productDto, List<MultipartFile> multipartFiles) throws IOException, IllegalStateException {
+        if(multipartFiles == null) {
+            throw new IllegalStateException("상품 이미지가 없습니다.");
         }
+
+        productDto.setImgCnt(multipartFiles.size() + 0L);
         Product product = productDto.toProduct();
         productRepository.save(product);
         for (MultipartFile multipartFile : multipartFiles) {
@@ -43,13 +45,13 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDto.Summary> getProductList(String keyword, String categoryName, int page, int per_page, String sort) {
+    public List<ProductDto.Summary> getProductList(String keyword, String categoryName, int page, int per_page) {
         List<Product> products;
 
         if (keyword != null) {
             keyword = "%" + keyword + "%";
         }
-        products = productRepository.findByCategoryAndKeyword(keyword, categoryName, page, per_page, sort);
+        products = productRepository.findByCategoryAndKeyword(keyword, categoryName, page, per_page);
 
         List<ProductDto.Summary> result = products.stream().map(this::toProductSummary).collect(Collectors.toList());
 

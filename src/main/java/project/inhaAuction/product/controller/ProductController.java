@@ -32,15 +32,17 @@ public class ProductController {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(new Result<>(productService.addProduct(product, files)));
         } catch (IOException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("상품 사진 업로드 실패", "403"));
+            return ResponseEntity.badRequest().body(new ErrorResponse("상품 사진 업로드 실패", "400"));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
         }
     }
 
     //상품 목록 조회(검색어, 카테고리명)
     @GetMapping()
     public ResponseEntity<BasicResponse> getProducts(@RequestParam(required = false) String keyword, @RequestParam(required = false) String categoryName,
-                                                     @RequestParam int page, @RequestParam int per_page, @RequestParam String sort) {
-        return ResponseEntity.ok(new Result<>(productService.getProductList(keyword, categoryName, page, per_page, sort),
+                                                     @RequestParam int page, @RequestParam int per_page) {
+        return ResponseEntity.ok(new Result<>(productService.getProductList(keyword, categoryName, page, per_page),
                 productService.getProductCount(keyword, categoryName, page, per_page)));
     }
 
