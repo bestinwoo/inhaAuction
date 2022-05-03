@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 public class ResourceController {
 
     @GetMapping(value = "/image/{fileName}")
-    public ResponseEntity<Resource> getImageByPath(@PathVariable String fileName, @RequestParam String type) {
+    public ResponseEntity<?> getImageByPath(@PathVariable String fileName, @RequestParam String type) {
         String path = "C://auction/img/" + type + "/" + fileName;
         Resource resource = new FileSystemResource(path);
 
@@ -38,6 +38,7 @@ public class ResourceController {
         }
         catch (Exception e){
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 경로 오류");
         }
         // 이미지 리턴 실시 [브라우저에서 get 주소 확인 가능]
         return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);

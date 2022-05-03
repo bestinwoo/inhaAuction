@@ -20,7 +20,7 @@ public class ProductRepository {
     
     public List<Product> findByCategoryAndKeyword(String keyword, String categoryName, int page, int per_page) {
         return em.createQuery("select p from Product p where (:keyword is null or p.name like :keyword)" +
-                        " and (:categoryName is null or p.category.name like :categoryName)", Product.class)
+                        " and (:categoryName is null or p.category.name like :categoryName) order by p.endDate desc", Product.class)
                 .setParameter("keyword", keyword)
                 .setParameter("categoryName", categoryName)
                 .setFirstResult((page - 1) * per_page)
