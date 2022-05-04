@@ -23,6 +23,7 @@ public class ProductDto {
         private String content;
         private Long instantPrice;
         private LocalDateTime startDate;
+        private String successBidderId;
         private LocalDateTime endDate;
         private Long bidUnit;
         private String sellerId;
@@ -39,6 +40,7 @@ public class ProductDto {
         private Long startPrice;
         private Long instantPrice;
         private LocalDateTime endDate;
+        private String successBidderId;
         private String sellerId;
         private Long bidderCnt;
         private Long imgCnt;

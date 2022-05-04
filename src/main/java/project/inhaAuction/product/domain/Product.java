@@ -48,5 +48,19 @@ public class Product {
     //이미지 개수
     private Long imgCnt;
 
+    //낙찰자
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "success_bidder_id")
+    private Member successBidder;
 
+    //입찰 수 증가 (setter를 만드는 것보다 내부 객체에서 메소드를 만드는 것이 객체의 일관성 유지에 좋다.)
+    public Long increaseBidderCnt() {
+        return this.bidderCnt++;
+    }
+
+    public void setSuccessBidderId(Long id) {
+        this.successBidder = Member.builder()
+                .id(id)
+                .build();
+    }
 }

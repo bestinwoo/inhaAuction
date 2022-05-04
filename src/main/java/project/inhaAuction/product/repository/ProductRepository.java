@@ -37,9 +37,20 @@ public class ProductRepository {
                 .toString());
     }
 
+
     public Optional<Product> getProductDetail(Long id) {
         Product product = em.find(Product.class, id);
         return Optional.ofNullable(product);
+    }
+
+    public void increaseBidderCntById(Long id) {
+        Product product = em.find(Product.class, id);
+        product.increaseBidderCnt();
+    }
+
+    public void successBidById(Long pId, Long cId) {
+        Product product = em.find(Product.class, pId);
+        product.setSuccessBidderId(cId);
     }
 
     public void deleteById(Long id) {
