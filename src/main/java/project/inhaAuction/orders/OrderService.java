@@ -8,7 +8,9 @@ import project.inhaAuction.orders.dto.OrdersDto;
 import project.inhaAuction.product.domain.Product;
 import project.inhaAuction.product.repository.ProductRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,5 +45,11 @@ public class OrderService {
         });
         productRepository.increaseBidderCntById(orderDto.getProductId());
         return orderDto;
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrdersDto.Sales> getSalesHistory(Long memberId) {
+        List<Product> products = productRepository.findByMemberId(memberId);
+        return products.stream().map(OrdersDto.Sales::of).collect(Collectors.toList());
     }
 }

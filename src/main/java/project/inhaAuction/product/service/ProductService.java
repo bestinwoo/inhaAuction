@@ -85,6 +85,7 @@ public class ProductService {
                 .startPrice(product.getStartPrice())
                 .sellerId(product.getSeller().getLoginId())
                 .successBidderId(product.getSuccessBidder() == null ? null : product.getSuccessBidder().getLoginId())
+                .successBid(product.getSuccessBid())
                 .imgCnt(product.getImgCnt())
                 .build();
     }
@@ -104,6 +105,7 @@ public class ProductService {
                 .bidderCnt(product.getBidderCnt())
                 .imgCnt(product.getImgCnt())
                 .successBidderId(product.getSuccessBidder() == null ? null : product.getSuccessBidder().getLoginId())
+                .successBid(product.getSuccessBid())
                 .build();
     }
 }

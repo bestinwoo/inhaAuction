@@ -15,7 +15,7 @@ import project.inhaAuction.orders.dto.OrdersDto;
 @RequestMapping("/order")
 public class OrderController {
     private final OrderService orderService;
-
+    //입찰하기
     @PostMapping()
     public ResponseEntity<BasicResponse> tenderForProduct(@RequestBody OrdersDto.Request orderDto) {
         try {
@@ -23,5 +23,10 @@ public class OrderController {
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
         }
+    }
+    //판매 현황
+    @GetMapping("/sales")
+    public ResponseEntity<BasicResponse> getSalesHistory(@RequestParam Long memberId) {
+        return ResponseEntity.ok(new Result<>(orderService.getSalesHistory(memberId)));
     }
 }

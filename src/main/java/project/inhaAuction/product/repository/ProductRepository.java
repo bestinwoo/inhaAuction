@@ -37,24 +37,33 @@ public class ProductRepository {
                 .toString());
     }
 
+    public Product findById(Long id) {
+        return em.find(Product.class, id);
+    }
+
+    public List<Product> findByMemberId(Long id) {
+        return em.createQuery("select p from Product p where p.seller.id = :id", Product.class)
+                .setParameter("id", id)
+                .getResultList();
+    }
 
     public Optional<Product> getProductDetail(Long id) {
-        Product product = em.find(Product.class, id);
+        Product product = findById(id);
         return Optional.ofNullable(product);
     }
 
     public void increaseBidderCntById(Long id) {
-        Product product = em.find(Product.class, id);
+        Product product = findById(id);
         product.increaseBidderCnt();
     }
 
     public void successBidById(Long pId, Long cId) {
-        Product product = em.find(Product.class, pId);
+        Product product = findById(pId);
         product.setSuccessBidderId(cId);
     }
 
     public void deleteById(Long id) {
-        Product product = em.find(Product.class, id);
+        Product product = findById(id);
         em.remove(product);
     }
 }
