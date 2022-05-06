@@ -1,9 +1,6 @@
 package project.inhaAuction.product.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import project.inhaAuction.auth.domain.Member;
 import project.inhaAuction.product.domain.Category;
@@ -15,6 +12,7 @@ public class ProductDto {
     @Getter
     @Builder
     @AllArgsConstructor
+
     public static class Detail {
         private Long id;
         private String name;

@@ -45,4 +45,8 @@ public class Member {
 
     @Column(name = "phone")
     private String phone;
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }

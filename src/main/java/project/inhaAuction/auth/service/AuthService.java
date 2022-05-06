@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import project.inhaAuction.auth.domain.Member;
 import project.inhaAuction.auth.dto.*;
 import project.inhaAuction.auth.repository.MemberRepository;
-import project.inhaAuction.common.BasicResponse;
 import project.inhaAuction.common.Result;
 import project.inhaAuction.jwt.TokenProvider;
 
@@ -64,15 +63,15 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public MemberDto getMemberInfo(String loginId) {
+    public MemberDto.Response getMemberInfo(String loginId) {
         Optional<Member> member = memberRepository.findByLoginId(loginId);
-        return member.map(MemberDto::of).get();
+        return member.map(MemberDto.Response::of).get();
     }
 
     @Transactional(rollbackFor = Exception.class)
     public TokenDto login(LoginDto authRequest) {
         UsernamePasswordAuthenticationToken authenticationToken = authRequest.toAuthentication();
-
+        //TODO: 왜 authRequest.toAuthentication은 loginId로 토큰을 만드는데 Long id값으로 authentication이 만들어 지는 것일까? 예상 : customUserDetailsService의 loadUsername에서 loginId로 유저를 찾아서 그런듯?
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
@@ -109,6 +108,20 @@ public class AuthService {
                         tokenDto.getRefreshTokenExpiresIn() - new Date().getTime(), TimeUnit.MILLISECONDS);
 
         return ResponseEntity.ok(new Result<>(tokenDto));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void changePassword(MemberDto.changePassword memberDto) throws IllegalStateException {
+        Optional<Member> member = memberRepository.findById(memberDto.getId());
+        member.ifPresentOrElse(m -> {
+            if(passwordEncoder.matches(memberDto.getCurrentPassword(), m.getPassword())) {
+                m.changePassword(passwordEncoder.encode(memberDto.getNewPassword()));
+            } else {
+                throw new IllegalStateException("현재 비밀번호가 일치하지 않습니다.");
+            }
+        }, () -> {
+            throw new IllegalStateException("해당 유저가 존재하지 않습니다.");
+        });
     }
 
 

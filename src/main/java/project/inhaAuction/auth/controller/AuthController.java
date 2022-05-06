@@ -14,12 +14,12 @@ import java.io.IOException;
 
 @CrossOrigin()
 @RestController
-@RequestMapping("/auth")
+
 @AllArgsConstructor
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/register")
+    @PostMapping("/auth/register")
     public ResponseEntity<BasicResponse> register(@ModelAttribute RegisterDto authRequest) throws IOException {
         if(authRequest.getImage() == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("학생 인증 파일이 필요합니다.", "403"));
@@ -31,23 +31,39 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<TokenDto> login(@RequestBody LoginDto authRequest) {
         return ResponseEntity.ok(authService.login(authRequest));
     }
 
-    @PostMapping("/reissue")
+    @PostMapping("/auth/reissue")
     public ResponseEntity<?> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
         return authService.reissue(tokenRequestDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/auth/{id}")
     public ResponseEntity<BasicResponse> getMemberInfo(@PathVariable String id) {
-        MemberDto memberInfo = authService.getMemberInfo(id);
+        MemberDto.Response memberInfo = authService.getMemberInfo(id);
         if(memberInfo == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("회원 정보를 찾을 수 없습니다."));
         } else {
             return ResponseEntity.ok(new Result<>(memberInfo));
         }
     }
+
+    @PostMapping("/password")
+    public ResponseEntity<BasicResponse> changePassword(@RequestBody MemberDto.changePassword memberDto) {
+        try {
+            authService.changePassword(memberDto);
+            return ResponseEntity.ok(new Result<>("비밀번호 변경 완료"));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
+        }
+    }
+
+   /* @PostMapping("/{id}")
+    public void modifyMemberInfo(@PathVariable Long id) {
+
+    }*/
+
 }
