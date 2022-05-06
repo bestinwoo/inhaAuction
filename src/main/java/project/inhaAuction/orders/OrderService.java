@@ -77,4 +77,11 @@ public class OrderService {
        });
 
     }
+
+    //구매현황
+    @Transactional(readOnly = true)
+    public List<OrdersDto.Purchase> getPurchaseHistory(Long customerId) {
+        List<Orders> orders = orderRepository.findByCustomerId(customerId);
+        return orders.stream().map(OrdersDto.Purchase::of).collect(Collectors.toList());
+    }
 }

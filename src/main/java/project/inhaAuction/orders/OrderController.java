@@ -59,4 +59,15 @@ public class OrderController {
             return ResponseEntity.badRequest().body(new ErrorResponse((e.getMessage()), "400"));
         }
     }
+
+    //구매현황
+    @GetMapping()
+    public ResponseEntity<BasicResponse> getPurchaseHistory(@RequestParam Long customerId) {
+        List<OrdersDto.Purchase> history = orderService.getPurchaseHistory(customerId);
+        if(history.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("구매 내역이 없습니다."));
+        }
+
+        return ResponseEntity.ok(new Result<>(history));
+    }
 }

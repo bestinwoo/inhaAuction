@@ -50,4 +50,10 @@ public class OrderRepository {
 
         return orders.stream().findAny();
     }
+
+    public List<Orders> findByCustomerId(Long customerId) {
+        return em.createQuery("select o from Orders o where o.customer.id = :customerId", Orders.class)
+                .setParameter("customerId", customerId)
+                .getResultList();
+    }
 }
