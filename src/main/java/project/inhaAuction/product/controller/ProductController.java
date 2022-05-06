@@ -43,7 +43,7 @@ public class ProductController {
     public ResponseEntity<BasicResponse> getProducts(@RequestParam(required = false) String keyword, @RequestParam(required = false) String categoryName,
                                                      @RequestParam int page, @RequestParam int per_page) {
         return ResponseEntity.ok(new Result<>(productService.getProductList(keyword, categoryName, page, per_page),
-                productService.getProductCount(keyword, categoryName, page, per_page)));
+                productService.getProductCount(keyword, categoryName)));
     }
 
     //상품 삭제 TODO: 삭제 예외처리, 입찰자가 있는 상품일 경우 외래키 처리

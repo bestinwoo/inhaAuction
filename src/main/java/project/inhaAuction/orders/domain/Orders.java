@@ -6,6 +6,7 @@ import project.inhaAuction.auth.domain.Member;
 import project.inhaAuction.product.domain.Product;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -25,6 +26,8 @@ public class Orders {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    private LocalDateTime orderDate;
 
     private Long bid;
 }

@@ -59,8 +59,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Integer getProductCount(String keyword, String categoryName, int page, int per_page) {
-        return productRepository.getProductCount(keyword, categoryName, page, per_page);
+    public Integer getProductCount(String keyword, String categoryName) {
+        return productRepository.getProductCount(keyword, categoryName);
     }
 
     @Transactional(rollbackFor = Exception.class)

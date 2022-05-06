@@ -52,7 +52,9 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "success_bidder_id")
     private Member successBidder;
+
     //낙찰가
+    @Column(name = "success_bid")
     private Long successBid;
 
     //입찰 수 증가 (setter를 만드는 것보다 내부 객체에서 메소드를 만드는 것이 객체의 일관성 유지에 좋다.)
@@ -60,9 +62,10 @@ public class Product {
         return this.bidderCnt++;
     }
 
-    public void setSuccessBidderId(Long id) {
+    public void setSuccessBidderId(Long id, Long price) {
         this.successBidder = Member.builder()
                 .id(id)
                 .build();
+        this.successBid = price;
     }
 }

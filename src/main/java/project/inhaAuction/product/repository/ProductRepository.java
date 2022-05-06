@@ -28,7 +28,7 @@ public class ProductRepository {
                 .getResultList();
     }
 
-    public Integer getProductCount(String keyword, String categoryName, int page, int per_page) {
+    public Integer getProductCount(String keyword, String categoryName) {
         return Integer.parseInt(em.createQuery("select count(p) from Product p where (:keyword is null or p.name like :keyword)" +
                 " and (:categoryName is null or p.category.name like :categoryName)")
                 .setParameter("keyword", keyword)
@@ -57,9 +57,12 @@ public class ProductRepository {
         product.increaseBidderCnt();
     }
 
-    public void successBidById(Long pId, Long cId) {
+    public void successBidByIdAndPrice(Long pId, Long cId, Long price) throws IllegalStateException{
         Product product = findById(pId);
-        product.setSuccessBidderId(cId);
+        if(product.getSuccessBid() != null) {
+            throw new IllegalStateException("이미 낙찰된 상품입니다.");
+        }
+        product.setSuccessBidderId(cId, price);
     }
 
     public void deleteById(Long id) {

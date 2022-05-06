@@ -12,16 +12,16 @@ public class OrdersDto {
     @Getter
     @AllArgsConstructor
     public static class Sales {
+        private Long productId;
         private String productName;
         private Long successBidPrice;
-        private String state;
         private LocalDateTime endDate;
         private Long bidCnt;
 
         public static Sales of(Product product) {
-            return new Sales(product.getName(),
+            return new Sales(product.getId(),
+                    product.getName(),
                     product.getSuccessBid(),
-                    "d",
                     product.getEndDate(),
                     product.getBidderCnt());
         }
@@ -44,5 +44,31 @@ public class OrdersDto {
                     .bid(this.bid)
                     .build();
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class Response {
+        private Long customerId;
+        private String customerLoginId;
+        private Long bid;
+        private LocalDateTime endDate;
+        private LocalDateTime orderDate;
+
+        public static Response of(Orders orders) {
+            return new Response(orders.getCustomer().getId(),
+                    orders.getCustomer().getLoginId(),
+                    orders.getBid(),
+                    orders.getProduct().getEndDate(),
+                    orders.getOrderDate());
+        }
+    }
+
+    @Getter
+    public static class Successful {
+        private Long sellerId;
+        private Long productId;
+        private Long bidderId;
+        private Long bid;
     }
 }

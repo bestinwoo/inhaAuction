@@ -24,10 +24,10 @@ public class ProductDto {
         private Long instantPrice;
         private LocalDateTime startDate;
         private String successBidderId;
+        private Long successBid;
         private LocalDateTime endDate;
         private Long bidUnit;
         private String sellerId;
-        private Long successBid;
         private Long bidderCnt;
         private Long imgCnt;
     }
