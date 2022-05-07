@@ -49,4 +49,10 @@ public class Member {
     public void changePassword(String newPassword) {
         this.password = newPassword;
     }
+
+    public void modifyInfo(String email, String address, String phone) {
+        this.email = email;
+        this.address = address;
+        this.phone = phone;
+    }
 }

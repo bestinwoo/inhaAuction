@@ -51,19 +51,28 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/password")
+    @PostMapping("/member/password")
     public ResponseEntity<BasicResponse> changePassword(@RequestBody MemberDto.changePassword memberDto) {
         try {
             authService.changePassword(memberDto);
             return ResponseEntity.ok(new Result<>("비밀번호 변경 완료"));
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage(), "401"));
         }
     }
 
-   /* @PostMapping("/{id}")
-    public void modifyMemberInfo(@PathVariable Long id) {
-
-    }*/
+    @PatchMapping("/member/{id}")
+    public ResponseEntity<BasicResponse> modifyMemberInfo(@PathVariable Long id, @RequestBody MemberDto.modifyInfo memberDto) {
+        try {
+            authService.modifyMemberInfo(id, memberDto);
+            return ResponseEntity.ok(new Result<>("회원정보 수정 완료"));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage(), "401"));
+        }
+    }
 
 }

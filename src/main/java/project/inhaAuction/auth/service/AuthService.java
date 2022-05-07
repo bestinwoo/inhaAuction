@@ -14,6 +14,7 @@ import project.inhaAuction.auth.domain.Member;
 import project.inhaAuction.auth.dto.*;
 import project.inhaAuction.auth.repository.MemberRepository;
 import project.inhaAuction.common.Result;
+import project.inhaAuction.jwt.SecurityUtil;
 import project.inhaAuction.jwt.TokenProvider;
 
 import java.io.File;
@@ -111,7 +112,10 @@ public class AuthService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void changePassword(MemberDto.changePassword memberDto) throws IllegalStateException {
+    public void changePassword(MemberDto.changePassword memberDto) throws IllegalStateException, SecurityException {
+        if(!SecurityUtil.getCurrentMemberId().equals(memberDto.getId())) {
+            throw new SecurityException("본인 계정의 정보만 수정할 수 있습니다.");
+        }
         Optional<Member> member = memberRepository.findById(memberDto.getId());
         member.ifPresentOrElse(m -> {
             if(passwordEncoder.matches(memberDto.getCurrentPassword(), m.getPassword())) {
@@ -119,6 +123,20 @@ public class AuthService {
             } else {
                 throw new IllegalStateException("현재 비밀번호가 일치하지 않습니다.");
             }
+        }, () -> {
+            throw new IllegalStateException("해당 유저가 존재하지 않습니다.");
+        });
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void modifyMemberInfo(Long id, MemberDto.modifyInfo memberDto) throws IllegalStateException, SecurityException {
+        if(!SecurityUtil.getCurrentMemberId().equals(id)) {
+            throw new SecurityException("본인 계정의 정보만 수정할 수 있습니다.");
+        }
+
+        Optional<Member> member = memberRepository.findById(id);
+        member.ifPresentOrElse(m -> {
+            m.modifyInfo(memberDto.getEmail(), memberDto.getAddress(), memberDto.getPhone());
         }, () -> {
             throw new IllegalStateException("해당 유저가 존재하지 않습니다.");
         });

@@ -43,4 +43,11 @@ public class MemberDto {
         private String newPassword;
     }
 
+    @Getter
+    public static class modifyInfo {
+        private String email;
+        private String address;
+        private String phone;
+    }
+
 }
