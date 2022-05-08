@@ -75,6 +75,8 @@ public class OrdersDto {
     @Getter
     @AllArgsConstructor
     public static class Purchase {
+        private Long productId;
+        private Long sellerId;
         private String productName;
         private Long bid;
         private LocalDateTime endDate;
@@ -82,7 +84,9 @@ public class OrdersDto {
         private Long bidderCnt;
 
         public static Purchase of(Orders orders) {
-            return new Purchase(orders.getProduct().getName(),
+            return new Purchase(orders.getProduct().getSeller().getId(),
+                    orders.getProduct().getId(),
+                    orders.getProduct().getName(),
                     orders.getBid(),
                     orders.getProduct().getEndDate(),
                     orders.getProduct().getSuccessBid(),

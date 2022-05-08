@@ -12,7 +12,6 @@ public class ProductDto {
     @Getter
     @Builder
     @AllArgsConstructor
-
     public static class Detail {
         private Long id;
         private String name;
