@@ -2,6 +2,7 @@ package project.inhaAuction.auth.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import project.inhaAuction.auth.domain.ROLE;
 
 @Data
 @Builder
@@ -12,5 +13,6 @@ public class TokenDto {
     private Long refreshTokenExpiresIn;
     private String refreshToken;
     private Long memberId;
+    private ROLE state;
 }
 

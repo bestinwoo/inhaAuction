@@ -74,9 +74,10 @@ public class AuthService {
         UsernamePasswordAuthenticationToken authenticationToken = authRequest.toAuthentication();
         //TODO: 왜 authRequest.toAuthentication은 loginId로 토큰을 만드는데 Long id값으로 authentication이 만들어 지는 것일까? 예상 : customUserDetailsService의 loadUsername에서 loginId로 유저를 찾아서 그런듯?
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
+        MemberDto.Response memberInfo = getMemberInfo(authRequest.getId());
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
-        tokenDto.setMemberId(getMemberInfo(authRequest.getId()).getId());
+        tokenDto.setMemberId(memberInfo.getId());
+        tokenDto.setState(memberInfo.getState());
         redisTemplate.opsForValue()
                 .set("RefreshToken:" + authentication.getName(), tokenDto.getRefreshToken(),
                         tokenDto.getRefreshTokenExpiresIn() - new Date().getTime(), TimeUnit.MILLISECONDS);
