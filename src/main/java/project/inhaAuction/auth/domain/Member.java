@@ -29,7 +29,8 @@ public class Member {
     private String department;
 
     @Column(name = "state")
-    private String state;
+    @Enumerated(EnumType.STRING)
+    private ROLE state;
 
     @Column(name = "ban_date")
     private Date banDate;
@@ -54,5 +55,9 @@ public class Member {
         this.email = email;
         this.address = address;
         this.phone = phone;
+    }
+
+    public void modifyState(ROLE state) {
+        this.state = state;
     }
 }

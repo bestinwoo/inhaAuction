@@ -3,6 +3,7 @@ package project.inhaAuction.auth.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import project.inhaAuction.auth.domain.Member;
+import project.inhaAuction.auth.domain.ROLE;
 
 import java.util.Date;
 
@@ -15,7 +16,7 @@ public class MemberDto {
         private String name;
         private String email;
         private String department;
-        private String state;
+        private ROLE state;
         private Date banDate;
         private String loginId;
         private String address;

@@ -28,5 +28,6 @@ public class Category {
     private Long depth;
 
     @OneToMany(mappedBy = "parent")
+    @Builder.Default
     private List<Category> children = new ArrayList<>();
 }

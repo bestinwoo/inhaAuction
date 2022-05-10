@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private UserDetails createUserDetails(Member member) {
-        String role = member.getState();
+        String role = member.getState().toString();
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role);
 
         return new org.springframework.security.core.userdetails.User(

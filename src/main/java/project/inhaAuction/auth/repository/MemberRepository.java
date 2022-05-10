@@ -19,11 +19,6 @@ public class MemberRepository {
         return member;
     }
 
-    public List<Member> findAll() {
-        return em.createQuery("select m from Member m", Member.class)
-                .getResultList();
-    }
-
     public List<Member> findByKeyword(String keyword, int page, int per_page) {
         return em.createQuery("select m from Member m where (:keyword is null or m.loginId like :keyword)", Member.class)
                 .setParameter("keyword", keyword)
@@ -59,6 +54,9 @@ public class MemberRepository {
 
         return members.stream().findAny();
     }
+
+
+
 
 
 
