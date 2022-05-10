@@ -46,12 +46,10 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductDto.Summary> getProductList(String keyword, String categoryName, int page, int per_page) {
-        List<Product> products;
-
         if (keyword != null) {
             keyword = "%" + keyword + "%";
         }
-        products = productRepository.findByCategoryAndKeyword(keyword, categoryName, page, per_page);
+        List<Product> products = productRepository.findByCategoryAndKeyword(keyword, categoryName, page, per_page);
 
         List<ProductDto.Summary> result = products.stream().map(this::toProductSummary).collect(Collectors.toList());
 

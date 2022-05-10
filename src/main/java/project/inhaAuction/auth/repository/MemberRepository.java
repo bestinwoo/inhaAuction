@@ -3,6 +3,7 @@ package project.inhaAuction.auth.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import project.inhaAuction.auth.domain.Member;
+import project.inhaAuction.product.domain.Product;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -16,6 +17,26 @@ public class MemberRepository {
     public Member save(Member member) {
         em.persist(member);
         return member;
+    }
+
+    public List<Member> findAll() {
+        return em.createQuery("select m from Member m", Member.class)
+                .getResultList();
+    }
+
+    public List<Member> findByKeyword(String keyword, int page, int per_page) {
+        return em.createQuery("select m from Member m where (:keyword is null or m.loginId like :keyword)", Member.class)
+                .setParameter("keyword", keyword)
+                .setFirstResult((page - 1) * per_page)
+                .setMaxResults(per_page)
+                .getResultList();
+    }
+
+    public Integer getMemberCount(String keyword) {
+        return Integer.parseInt(em.createQuery("select count(m) from Member m where (:keyword is null or m.loginId like :keyword)")
+                .setParameter("keyword", keyword)
+                .getSingleResult()
+                .toString());
     }
 
     public Optional<Member> findById(Long id) {

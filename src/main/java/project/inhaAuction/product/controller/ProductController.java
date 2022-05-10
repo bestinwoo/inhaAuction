@@ -21,7 +21,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
     //모든 카테고리 조회
-    @GetMapping("/categories") //TODO: 카테고리 이름으로 검색 추가?
+    @GetMapping("/categories")
     public ResponseEntity<?> getCategoryList() {
         return ResponseEntity.ok(productService.getCategoryList());
     }
