@@ -3,7 +3,6 @@ package project.inhaAuction.auth.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import project.inhaAuction.auth.domain.Member;
-import project.inhaAuction.product.domain.Product;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -14,9 +13,8 @@ import java.util.Optional;
 public class MemberRepository {
     private final EntityManager em;
 
-    public Member save(Member member) {
+    public void save(Member member) {
         em.persist(member);
-        return member;
     }
 
     public List<Member> findByKeyword(String keyword, int page, int per_page) {
@@ -55,6 +53,9 @@ public class MemberRepository {
         return members.stream().findAny();
     }
 
+    public void delete(Member member) {
+        em.remove(member);
+    }
 
 
 

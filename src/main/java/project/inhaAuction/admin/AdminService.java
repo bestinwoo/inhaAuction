@@ -41,4 +41,14 @@ public class AdminService {
             throw new IllegalStateException("존재하지 않는 회원입니다.");
         });
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteMember(Long id) throws IllegalStateException {
+        Optional<Member> member = memberRepository.findById(id);
+        member.ifPresentOrElse(m -> {
+            memberRepository.delete(m);
+        }, () -> {
+            throw new IllegalStateException("존재하지 않는 회원입니다.");
+        });
+    }
 }

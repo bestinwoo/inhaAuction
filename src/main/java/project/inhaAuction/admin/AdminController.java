@@ -32,7 +32,6 @@ public class AdminController {
     @PostMapping("/members/{id}")
     public ResponseEntity<BasicResponse> modifyMemberState(@PathVariable Long id, @RequestBody Map<String, ROLE> state) {
         try {
-
             adminService.modifyMemberState(id, state.get("state"));
             return ResponseEntity.ok(new Result<>("회원 상태 변경이 완료되었습니다."));
         } catch(IllegalStateException e) {
@@ -40,6 +39,15 @@ public class AdminController {
         }
     }
 
+    @DeleteMapping("/members/{id}")
+    public ResponseEntity<BasicResponse> deleteMember(@PathVariable Long id) {
+        try {
+            adminService.deleteMember(id);
+            return ResponseEntity.ok(new Result<>("삭제 완료"));
+        } catch(IllegalStateException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
+        }
+    }
 }
 
 
