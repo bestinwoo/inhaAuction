@@ -14,7 +14,6 @@ import java.io.IOException;
 
 @CrossOrigin()
 @RestController
-
 @AllArgsConstructor
 public class AuthController {
     private final AuthService authService;
@@ -63,7 +62,7 @@ public class AuthController {
         }
     }
 
-    @PatchMapping("/member/{id}")
+    @PostMapping("/member/{id}")
     public ResponseEntity<BasicResponse> modifyMemberInfo(@PathVariable Long id, @RequestBody MemberDto.modifyInfo memberDto) {
         try {
             authService.modifyMemberInfo(id, memberDto);
