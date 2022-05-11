@@ -81,15 +81,21 @@ public class OrdersDto {
         private Long bid;
         private LocalDateTime endDate;
         private Long successBid;
+        private Long successBidderId;
         private Long bidderCnt;
 
         public static Purchase of(Orders orders) {
+            Long bidderId = null;
+            if(orders.getProduct().getSuccessBidder() != null) {
+                bidderId = orders.getProduct().getSuccessBidder().getId();
+            }
             return new Purchase(orders.getProduct().getSeller().getId(),
                     orders.getProduct().getId(),
                     orders.getProduct().getName(),
                     orders.getBid(),
                     orders.getProduct().getEndDate(),
                     orders.getProduct().getSuccessBid(),
+                    bidderId,
                     orders.getProduct().getBidderCnt());
         }
     }
