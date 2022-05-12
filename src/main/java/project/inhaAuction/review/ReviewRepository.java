@@ -22,4 +22,11 @@ public class ReviewRepository {
                 .setParameter("id", id)
                 .getResultList();
     }
+
+    public Integer countByProductId(Long id) {
+        return Integer.parseInt(em.createQuery("select count(r) from Review r where r.product.id = :id")
+                .setParameter("id", id)
+                .getSingleResult()
+                .toString());
+    }
 }

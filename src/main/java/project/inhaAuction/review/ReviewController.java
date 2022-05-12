@@ -12,6 +12,7 @@ import project.inhaAuction.review.dto.ReviewDto;
 import java.util.List;
 
 @RestController
+@CrossOrigin()
 @RequestMapping("/review")
 @RequiredArgsConstructor
 public class ReviewController {
@@ -19,7 +20,11 @@ public class ReviewController {
 
     @PostMapping
     public ResponseEntity<BasicResponse> writeReview(@RequestBody ReviewDto.Write write) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Result<>(reviewService.writeReview(write)));
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(new Result<>(reviewService.writeReview(write)));
+        } catch(IllegalStateException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
+        }
     }
 
     @GetMapping("/{memberId}")

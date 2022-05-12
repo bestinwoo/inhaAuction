@@ -16,7 +16,10 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
 
     @Transactional(rollbackFor = Exception.class)
-    public ReviewDto.Response writeReview(ReviewDto.Write write) {
+    public ReviewDto.Response writeReview(ReviewDto.Write write) throws IllegalStateException {
+        if(write.getWriterId().equals(write.getSellerId())) {
+            throw new IllegalStateException("자신의 상점에는 후기를 작성할 수 없습니다.");
+        }
         Review review = write.toReview();
         Review save = reviewRepository.save(review);
         return ReviewDto.Response.of(save);

@@ -8,6 +8,7 @@ import project.inhaAuction.orders.domain.Orders;
 import project.inhaAuction.orders.dto.OrdersDto;
 import project.inhaAuction.product.domain.Product;
 import project.inhaAuction.product.repository.ProductRepository;
+import project.inhaAuction.review.ReviewRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final ReviewRepository reviewRepository;
 
     //입찰
     @Transactional(rollbackFor = Exception.class)
@@ -31,9 +33,11 @@ public class OrderService {
             }
         });
 
-        orderRepository.save(newOrder);
         Optional<Product> product = productRepository.getProductDetail(orderDto.getProductId());
         product.ifPresentOrElse(p -> {
+            if(p.getSeller().getId().equals(orderDto.getCustomerId())) {
+                throw new IllegalStateException("본인의 상품에는 입찰할 수 없습니다.");
+            }
             if(orderDto.getBid() < p.getStartPrice()) {
                 throw new IllegalStateException("시작가보다 낮은 가격으로는 입찰할 수 없습니다.");
             } else if(p.getInstantPrice() != null) {
@@ -46,6 +50,8 @@ public class OrderService {
         }, () -> {
             throw new IllegalStateException("해당 상품을 찾을 수 없습니다.");
         });
+
+        orderRepository.save(newOrder);
         productRepository.increaseBidderCntById(orderDto.getProductId());
         return orderDto;
     }
@@ -69,6 +75,9 @@ public class OrderService {
        if(!SecurityUtil.getCurrentMemberId().equals(orderDto.getSellerId())) {
            throw new SecurityException("판매자만 낙찰이 가능합니다.");
        }
+       if(orderDto.getBidderId().equals(orderDto.getSellerId())) {
+           throw new IllegalStateException("본인을 낙찰자로 지정할 수 없습니다.");
+       }
        Optional<Orders> order = orderRepository.findByBid(orderDto.getProductId(), orderDto.getBidderId(), orderDto.getBid());
        order.ifPresentOrElse(o -> {
            productRepository.successBidByIdAndPrice(orderDto.getProductId(), orderDto.getBidderId(), orderDto.getBid());
@@ -82,6 +91,10 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<OrdersDto.Purchase> getPurchaseHistory(Long customerId) {
         List<Orders> orders = orderRepository.findByCustomerId(customerId);
-        return orders.stream().map(OrdersDto.Purchase::of).collect(Collectors.toList());
+
+        return orders.stream().map(OrdersDto.Purchase::of).collect(Collectors.toList()).stream().map(o -> {
+            o.setReviewYn(reviewRepository.countByProductId(o.getProductId()));
+            return o;
+        }).collect(Collectors.toList());
     }
 }

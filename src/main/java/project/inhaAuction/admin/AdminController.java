@@ -17,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin()
 @RequestMapping("/admin")
 public class AdminController {
     private final AdminService adminService;

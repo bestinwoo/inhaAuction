@@ -1,6 +1,7 @@
 package project.inhaAuction.orders.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import project.inhaAuction.auth.domain.Member;
 import project.inhaAuction.orders.domain.Orders;
@@ -73,6 +74,7 @@ public class OrdersDto {
     }
 
     @Getter
+    @Builder
     @AllArgsConstructor
     public static class Purchase {
         private Long productId;
@@ -83,20 +85,32 @@ public class OrdersDto {
         private Long successBid;
         private Long successBidderId;
         private Long bidderCnt;
+        private String reviewYn;
 
         public static Purchase of(Orders orders) {
             Long bidderId = null;
             if(orders.getProduct().getSuccessBidder() != null) {
                 bidderId = orders.getProduct().getSuccessBidder().getId();
             }
-            return new Purchase(orders.getProduct().getSeller().getId(),
-                    orders.getProduct().getId(),
-                    orders.getProduct().getName(),
-                    orders.getBid(),
-                    orders.getProduct().getEndDate(),
-                    orders.getProduct().getSuccessBid(),
-                    bidderId,
-                    orders.getProduct().getBidderCnt());
+
+            return Purchase.builder()
+                    .productId(orders.getProduct().getId())
+                    .sellerId(orders.getProduct().getSeller().getId())
+                    .productName(orders.getProduct().getName())
+                    .bid(orders.getBid())
+                    .endDate(orders.getProduct().getEndDate())
+                    .successBid(orders.getProduct().getSuccessBid())
+                    .successBidderId(bidderId)
+                    .bidderCnt(orders.getProduct().getBidderCnt())
+                    .build();
+        }
+
+        public void setReviewYn(Integer count) {
+            if(count > 0) {
+                this.reviewYn = "Y";
+            } else {
+                this.reviewYn = "N";
+            }
         }
     }
 }

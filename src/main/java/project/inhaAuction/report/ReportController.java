@@ -13,7 +13,7 @@ import project.inhaAuction.report.dto.ReportDto;
 import java.io.IOException;
 
 @Controller
-@CrossOrigin
+@CrossOrigin()
 @RequiredArgsConstructor
 @RequestMapping("/report")
 public class ReportController {
