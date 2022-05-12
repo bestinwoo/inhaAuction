@@ -1,7 +1,6 @@
 package project.inhaAuction.auth.domain;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -30,7 +29,7 @@ public class Member {
 
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
-    private ROLE state;
+    private Role state;
 
     @Column(name = "ban_date")
     private Date banDate;
@@ -57,7 +56,7 @@ public class Member {
         this.phone = phone;
     }
 
-    public void modifyState(ROLE state) {
+    public void modifyState(Role state) {
         this.state = state;
     }
 }

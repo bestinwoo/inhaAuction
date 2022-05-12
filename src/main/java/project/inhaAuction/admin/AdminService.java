@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.inhaAuction.auth.domain.Member;
-import project.inhaAuction.auth.domain.ROLE;
+import project.inhaAuction.auth.domain.Role;
 import project.inhaAuction.auth.dto.MemberDto;
 import project.inhaAuction.auth.repository.MemberRepository;
 
@@ -33,7 +33,7 @@ public class AdminService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void modifyMemberState(Long id, ROLE state) throws IllegalStateException {
+    public void modifyMemberState(Long id, Role state) throws IllegalStateException {
         Optional<Member> member = memberRepository.findById(id);
         member.ifPresentOrElse(m -> {
             m.modifyState(state);
