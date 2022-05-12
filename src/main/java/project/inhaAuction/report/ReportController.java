@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import project.inhaAuction.common.BasicResponse;
 import project.inhaAuction.common.ErrorResponse;
 import project.inhaAuction.common.Result;
@@ -15,6 +13,7 @@ import project.inhaAuction.report.dto.ReportDto;
 import java.io.IOException;
 
 @Controller
+@CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/report")
 public class ReportController {
@@ -29,4 +28,5 @@ public class ReportController {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
         }
     }
+
 }

@@ -10,6 +10,7 @@ import project.inhaAuction.report.dto.ReportDto;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,5 +28,16 @@ public class ReportService {
         for (MultipartFile file : files) {
             file.transferTo(new File("report", "report-" + report.getId().toString() + "-" + files.indexOf(file) + ".png"));
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReportDto.Response> getReports(int page, int per_page) {
+        List<Report> reports = reportRepository.findByPage(page, per_page);
+        return reports.stream().map(ReportDto.Response::of).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Integer getReportsCount() {
+        return reportRepository.getReportCount();
     }
 }

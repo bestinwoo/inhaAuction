@@ -17,8 +17,17 @@ public class ReportRepository {
         return report;
     }
 
-    public List<Report> findAll() {
+    public List<Report> findByPage(int page, int per_page) {
         return em.createQuery("select r from Report r", Report.class)
+                .setFirstResult((page - 1) * per_page)
+                .setMaxResults(per_page)
                 .getResultList();
     }
+
+    public Integer getReportCount() {
+        return Integer.parseInt(em.createQuery("select count(r) from Report r")
+                .getSingleResult()
+                .toString());
+    }
+
 }
