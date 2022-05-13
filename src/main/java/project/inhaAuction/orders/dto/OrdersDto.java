@@ -11,20 +11,25 @@ import java.time.LocalDateTime;
 
 public class OrdersDto {
     @Getter
+    @Builder
     @AllArgsConstructor
     public static class Sales {
         private Long productId;
         private String productName;
         private Long successBidPrice;
         private LocalDateTime endDate;
+        private Long instantPrice;
         private Long bidCnt;
 
         public static Sales of(Product product) {
-            return new Sales(product.getId(),
-                    product.getName(),
-                    product.getSuccessBid(),
-                    product.getEndDate(),
-                    product.getBidderCnt());
+            return Sales.builder()
+                    .productId(product.getId())
+                    .productName(product.getName())
+                    .successBidPrice(product.getSuccessBid())
+                    .endDate(product.getEndDate())
+                    .instantPrice(product.getInstantPrice())
+                    .bidCnt(product.getBidderCnt())
+                    .build();
         }
     }
 
@@ -82,6 +87,7 @@ public class OrdersDto {
         private String productName;
         private Long bid;
         private LocalDateTime endDate;
+
         private Long successBid;
         private Long successBidderId;
         private Long bidderCnt;
