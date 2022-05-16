@@ -2,6 +2,8 @@ package project.inhaAuction.report.domain;
 
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import project.inhaAuction.auth.domain.Member;
 import project.inhaAuction.product.domain.Product;
 
@@ -27,6 +29,10 @@ public class Report
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reported_id")
+    private Member reported;
 
     private String content;
     private String title;

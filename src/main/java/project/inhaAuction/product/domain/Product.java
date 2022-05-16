@@ -2,6 +2,8 @@ package project.inhaAuction.product.domain;
 
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import project.inhaAuction.auth.domain.Member;
 
 import javax.persistence.*;
@@ -40,6 +42,7 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
+    @NotFound(action = NotFoundAction.IGNORE)
     private Member seller;
 
     //입찰 수

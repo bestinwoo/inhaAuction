@@ -24,7 +24,8 @@ public class ProductDto {
         private Long successBid;
         private LocalDateTime endDate;
         private Long bidUnit;
-        private String sellerId;
+        private String sellerLoginId;
+        private Long sellerId;
         private Long bidderCnt;
         private Long imgCnt;
     }
@@ -40,7 +41,7 @@ public class ProductDto {
         private LocalDateTime endDate;
         private String successBidderId;
         private Long successBid;
-        private String sellerId;
+        private String sellerLoginId;
         private Long bidderCnt;
         private Long imgCnt;
     }

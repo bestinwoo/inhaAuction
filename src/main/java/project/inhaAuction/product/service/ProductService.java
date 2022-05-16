@@ -10,6 +10,7 @@ import project.inhaAuction.product.dto.ProductDto;
 import project.inhaAuction.product.repository.CategoryRepository;
 import project.inhaAuction.product.repository.ProductRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -74,6 +75,17 @@ public class ProductService {
     }
 
     private ProductDto.Summary toProductSummary(final Product product) {
+        String sellerLoginId = null;
+        String successBidderLoginId = null;
+        try {
+            if(product.getSuccessBidder() != null)
+            successBidderLoginId = product.getSuccessBidder().getLoginId();
+        } catch(EntityNotFoundException e) {
+            e.printStackTrace();
+        }
+        if(product.getSeller() != null) {
+            sellerLoginId = product.getSeller().getLoginId();
+        }
         return ProductDto.Summary.builder()
                 .id(product.getId())
                 .instantPrice(product.getInstantPrice())
@@ -81,14 +93,20 @@ public class ProductService {
                 .name(product.getName())
                 .bidderCnt(product.getBidderCnt())
                 .startPrice(product.getStartPrice())
-                .sellerId(product.getSeller().getLoginId())
-                .successBidderId(product.getSuccessBidder() == null ? null : product.getSuccessBidder().getLoginId())
+                .sellerLoginId(sellerLoginId)
+                .successBidderId(successBidderLoginId)
                 .successBid(product.getSuccessBid())
                 .imgCnt(product.getImgCnt())
                 .build();
     }
 
     private ProductDto.Detail toProductDetail(final Product product) {
+        String sellerLoginId = null;
+        Long sellerId = null;
+        if(product.getSeller() != null) {
+            sellerId = product.getSeller().getId();
+            sellerLoginId = product.getSeller().getLoginId();
+        }
         return ProductDto.Detail.builder()
                 .id(product.getId())
                 .name(product.getName())
@@ -99,7 +117,8 @@ public class ProductService {
                 .endDate(product.getEndDate())
                 .bidUnit(product.getBidUnit())
                 .startDate(product.getStartDate())
-                .sellerId(product.getSeller().getLoginId())
+                .sellerLoginId(sellerLoginId)
+                .sellerId(sellerId)
                 .bidderCnt(product.getBidderCnt())
                 .imgCnt(product.getImgCnt())
                 .successBidderId(product.getSuccessBidder() == null ? null : product.getSuccessBidder().getLoginId())

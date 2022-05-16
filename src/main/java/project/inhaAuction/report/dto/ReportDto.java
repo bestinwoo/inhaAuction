@@ -18,6 +18,7 @@ public class ReportDto {
         private Long productId;
         private String title;
         private Long writerId;
+        private Long reportedId;
         private String content;
         private Long imgCnt = 0L;
         private List<MultipartFile> files = new ArrayList<>();
@@ -27,6 +28,7 @@ public class ReportDto {
                     .writer(Member.builder().id(writerId).build())
                     .product(Product.builder().id(productId).build())
                     .state("N")
+                    .reported(Member.builder().id(reportedId).build())
                     .content(this.content)
                     .title(this.title)
                     .imgCnt(this.imgCnt)
@@ -50,8 +52,8 @@ public class ReportDto {
                     .productId(report.getProduct().getId())
                     .productName(report.getProduct().getName())
                     .title(report.getTitle())
-                    .writerId(report.getWriter().getId())
-                    .reportedId(report.getProduct().getSeller().getId())
+                    .writerId(report.getWriter() == null ? null : report.getWriter().getId())
+                    .reportedId(report.getReported() == null ? null : report.getReported().getId())
                     .content(report.getContent())
                     .imgCnt(report.getImgCnt())
                     .build();
