@@ -31,8 +31,12 @@ public class AuthController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<TokenDto> login(@RequestBody LoginDto authRequest) {
-        return ResponseEntity.ok(authService.login(authRequest));
+    public ResponseEntity<BasicResponse> login(@RequestBody LoginDto authRequest) {
+        try {
+            return ResponseEntity.ok(new Result<>(authService.login(authRequest)));
+        } catch(IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getMessage(), "403"));
+        }
     }
 
     @PostMapping("/auth/reissue")

@@ -1,6 +1,7 @@
 package project.inhaAuction.auth.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import project.inhaAuction.auth.domain.Member;
 import project.inhaAuction.auth.domain.Role;
@@ -10,6 +11,7 @@ import java.util.Date;
 
 public class MemberDto {
     @Getter
+    @Builder
     @AllArgsConstructor
     public static class Response {
         private Long id;
@@ -23,17 +25,17 @@ public class MemberDto {
         private String phone;
 
         public static Response of(Member member) {
-            return new Response(
-                    member.getId(),
-                    member.getName(),
-                    member.getEmail(),
-                    member.getDepartment(),
-                    member.getState(),
-                    member.getBanDate(),
-                    member.getLoginId(),
-                    member.getAddress(),
-                    member.getPhone()
-            );
+            return Response.builder()
+                    .id(member.getId())
+                    .name(member.getName())
+                    .email(member.getEmail())
+                    .department(member.getDepartment())
+                    .state(member.getState())
+                    .banDate(member.getBanDate())
+                    .loginId(member.getLoginId())
+                    .address(member.getAddress())
+                    .phone(member.getPhone())
+                    .build();
         }
     }
 

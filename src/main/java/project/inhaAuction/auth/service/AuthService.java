@@ -70,11 +70,16 @@ public class AuthService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public TokenDto login(LoginDto authRequest) {
+    public TokenDto login(LoginDto authRequest) throws IllegalStateException {
         UsernamePasswordAuthenticationToken authenticationToken = authRequest.toAuthentication();
         //TODO: 왜 authRequest.toAuthentication은 loginId로 토큰을 만드는데 Long id값으로 authentication이 만들어 지는 것일까? 예상 : customUserDetailsService의 loadUsername에서 loginId로 유저를 찾아서 그런듯?
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         MemberDto.Response memberInfo = getMemberInfo(authRequest.getId());
+        if(memberInfo.getBanDate() != null) {
+            if(memberInfo.getBanDate().getTime() > new Date().getTime()) {
+                throw new IllegalStateException("정지된 회원입니다. " + memberInfo.getBanDate() + "일까지 이용할 수 없습니다.");
+            }
+        }
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
         tokenDto.setMemberId(memberInfo.getId());
         tokenDto.setState(memberInfo.getState());

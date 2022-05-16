@@ -12,6 +12,7 @@ import project.inhaAuction.common.Result;
 import project.inhaAuction.report.ReportService;
 import project.inhaAuction.report.dto.ReportDto;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,17 @@ public class AdminController {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
         }
     }
+
+    @PostMapping("/members/ban")
+    public ResponseEntity<BasicResponse> memberBan(@RequestBody Map<Long, Date> map) {
+        try {
+            adminService.memberBan(map);
+            return ResponseEntity.ok(new Result<>("회원 정지가 완료되었습니다."));
+        } catch(IllegalStateException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
+        }
+    }
+
     //TODO: 탈퇴시 이미지파일 삭제하기
     @DeleteMapping("/members/{id}")
     public ResponseEntity<BasicResponse> deleteMember(@PathVariable Long id) {

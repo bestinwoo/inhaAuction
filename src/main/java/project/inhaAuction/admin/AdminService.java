@@ -8,6 +8,7 @@ import project.inhaAuction.auth.domain.Role;
 import project.inhaAuction.auth.dto.MemberDto;
 import project.inhaAuction.auth.repository.MemberRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +50,18 @@ public class AdminService {
             Optional<Member> member = memberRepository.findById(entry.getKey());
             member.ifPresentOrElse(m -> {
                 m.modifyState(entry.getValue());
+            }, () -> {
+                throw new IllegalStateException("존재하지 않는 회원입니다.");
+            });
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void memberBan(Map<Long, Date> map) throws IllegalStateException {
+        for (Map.Entry<Long,Date> entry: map.entrySet()) {
+            Optional<Member> member = memberRepository.findById(entry.getKey());
+            member.ifPresentOrElse(m -> {
+                m.setBanDate(entry.getValue());
             }, () -> {
                 throw new IllegalStateException("존재하지 않는 회원입니다.");
             });

@@ -31,6 +31,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role state;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "ban_date")
     private Date banDate;
 
@@ -58,5 +59,9 @@ public class Member {
 
     public void modifyState(Role state) {
         this.state = state;
+    }
+
+    public void setBanDate(Date date) {
+        this.banDate = date;
     }
 }
