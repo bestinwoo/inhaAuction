@@ -33,16 +33,16 @@ public class AdminController {
         return ResponseEntity.ok(new Result<>(members, adminService.getMembersCount(keyword)));
     }
 
-    @PostMapping("/members/{id}")
-    public ResponseEntity<BasicResponse> modifyMemberState(@PathVariable Long id, @RequestBody Map<String, Role> state) {
+    @PostMapping("/members")
+    public ResponseEntity<BasicResponse> modifyMemberState(@RequestBody Map<Long, Role> map) {
         try {
-            adminService.modifyMemberState(id, state.get("state"));
+            adminService.modifyMemberState(map);
             return ResponseEntity.ok(new Result<>("회원 상태 변경이 완료되었습니다."));
         } catch(IllegalStateException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
         }
     }
-
+    //TODO: 탈퇴시 이미지파일 삭제하기
     @DeleteMapping("/members/{id}")
     public ResponseEntity<BasicResponse> deleteMember(@PathVariable Long id) {
         try {
