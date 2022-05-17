@@ -39,21 +39,23 @@ public class ReportDto {
     @Getter
     @Builder
     public static class Response {
+        private Long id;
         private Long productId;
         private String productName;
         private String title;
-        private Long writerId;
-        private Long reportedId;
+        private String writerLoginId;
+        private String reportedLoginId;
         private String content;
         private Long imgCnt;
 
         public static Response of(Report report) {
             return Response.builder()
+                    .id(report.getId())
                     .productId(report.getProduct().getId())
                     .productName(report.getProduct().getName())
                     .title(report.getTitle())
-                    .writerId(report.getWriter() == null ? null : report.getWriter().getId())
-                    .reportedId(report.getReported() == null ? null : report.getReported().getId())
+                    .writerLoginId(report.getWriter() == null ? null : report.getWriter().getLoginId())
+                    .reportedLoginId(report.getReported() == null ? null : report.getReported().getLoginId())
                     .content(report.getContent())
                     .imgCnt(report.getImgCnt())
                     .build();

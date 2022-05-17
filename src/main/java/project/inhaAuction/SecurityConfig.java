@@ -60,11 +60,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
-                .antMatchers("/image/**").permitAll()
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/image/**", "/auth/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/order/**", "/member/**", "/report/**", "/review/**").hasRole("USER")
+                .antMatchers(HttpMethod.POST,"/product").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/product/**").permitAll() // 상품쪽은 조회만 권한없이 가능
-                .anyRequest().authenticated()  // 나머지 API 는 전부 인증 필요
+                .anyRequest().authenticated()
+
+
 
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .and()

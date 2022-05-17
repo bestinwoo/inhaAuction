@@ -14,7 +14,6 @@ import javax.persistence.EntityNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +34,7 @@ public class ProductService {
             throw new IllegalStateException("상품 이미지가 없습니다.");
         }
 
-        productDto.setImgCnt(multipartFiles.size() + 0L);
+        productDto.setImgCnt((long) multipartFiles.size());
         Product product = productDto.toProduct();
         productRepository.save(product);
         for (MultipartFile multipartFile : multipartFiles) {
@@ -76,13 +75,7 @@ public class ProductService {
 
     private ProductDto.Summary toProductSummary(final Product product) {
         String sellerLoginId = null;
-        String successBidderLoginId = null;
-        try {
-            if(product.getSuccessBidder() != null)
-            successBidderLoginId = product.getSuccessBidder().getLoginId();
-        } catch(EntityNotFoundException e) {
-            e.printStackTrace();
-        }
+
         if(product.getSeller() != null) {
             sellerLoginId = product.getSeller().getLoginId();
         }
@@ -94,7 +87,7 @@ public class ProductService {
                 .bidderCnt(product.getBidderCnt())
                 .startPrice(product.getStartPrice())
                 .sellerLoginId(sellerLoginId)
-                .successBidderId(successBidderLoginId)
+                .successBidderId(getSuccessBidderId(product))
                 .successBid(product.getSuccessBid())
                 .imgCnt(product.getImgCnt())
                 .build();
@@ -107,6 +100,7 @@ public class ProductService {
             sellerId = product.getSeller().getId();
             sellerLoginId = product.getSeller().getLoginId();
         }
+
         return ProductDto.Detail.builder()
                 .id(product.getId())
                 .name(product.getName())
@@ -121,8 +115,20 @@ public class ProductService {
                 .sellerId(sellerId)
                 .bidderCnt(product.getBidderCnt())
                 .imgCnt(product.getImgCnt())
-                .successBidderId(product.getSuccessBidder() == null ? null : product.getSuccessBidder().getLoginId())
+                .successBidderId(getSuccessBidderId(product))
                 .successBid(product.getSuccessBid())
                 .build();
+    }
+
+    private String getSuccessBidderId(Product product) {
+        String successBidderLoginId = null;
+        try {
+            if(product.getSuccessBidder() != null)
+                successBidderLoginId = product.getSuccessBidder().getLoginId();
+        } catch(EntityNotFoundException e) {
+            System.out.println("e = " + e);;
+        }
+
+        return successBidderLoginId;
     }
 }

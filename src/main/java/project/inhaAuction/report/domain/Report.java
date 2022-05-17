@@ -2,8 +2,6 @@ package project.inhaAuction.report.domain;
 
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import project.inhaAuction.auth.domain.Member;
 import project.inhaAuction.product.domain.Product;
 
