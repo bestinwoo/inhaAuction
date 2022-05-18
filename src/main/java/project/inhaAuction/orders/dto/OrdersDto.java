@@ -62,8 +62,8 @@ public class OrdersDto {
         private LocalDateTime orderDate;
 
         public static Response of(Orders orders) {
-            return new Response(orders.getCustomer().getId(),
-                    orders.getCustomer().getLoginId(),
+            return new Response(orders.getCustomer() == null ? null : orders.getCustomer().getId(),
+                    orders.getCustomer() == null ? null : orders.getCustomer().getLoginId(),
                     orders.getBid(),
                     orders.getProduct().getEndDate(),
                     orders.getOrderDate());
