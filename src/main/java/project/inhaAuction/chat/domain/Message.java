@@ -1,12 +1,17 @@
 package project.inhaAuction.chat.domain;
 
-import lombok.Getter;
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 import project.inhaAuction.auth.domain.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@DynamicInsert
 @Getter
 public class Message {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

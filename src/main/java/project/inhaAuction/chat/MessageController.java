@@ -8,7 +8,9 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import project.inhaAuction.chat.dto.ChatRoomDto;
+import project.inhaAuction.chat.dto.MessageDto;
 import project.inhaAuction.chat.service.ChatRoomService;
+import project.inhaAuction.chat.service.MessageService;
 import project.inhaAuction.common.BasicResponse;
 import project.inhaAuction.common.Result;
 
@@ -18,10 +20,12 @@ import project.inhaAuction.common.Result;
 public class MessageController {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatRoomService chatRoomService;
+    private final MessageService messageService;
 
-    @MessageMapping("/chat/{roomId}")
-    public void chat(@DestinationVariable("roomId") Long roomId) {
-        messagingTemplate.convertAndSend("/topic/" + roomId, "채팅방 연결 완료");
+    @MessageMapping("/chat/send")
+    public void chat(MessageDto.Send message) {
+        messageService.sendMessage(message);
+        messagingTemplate.convertAndSend("/topic/chat/" + message.getRoomId(), message);
     }
 
     @PostMapping("/chat/room")

@@ -6,8 +6,12 @@ import lombok.Getter;
 import project.inhaAuction.auth.domain.Member;
 import project.inhaAuction.auth.dto.MemberDto;
 import project.inhaAuction.chat.domain.ChatRoom;
+import project.inhaAuction.chat.domain.Message;
 import project.inhaAuction.product.domain.Product;
 import project.inhaAuction.product.dto.ProductDto;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChatRoomDto {
     @Getter
@@ -34,6 +38,7 @@ public class ChatRoomDto {
         private MemberDto.Response seller;
         private MemberDto.Response customer;
         private ProductDto.Summary product;
+        private List<MessageDto.Response> messages;
 
         public static Response of(ChatRoom chatRoom) {
             MemberDto.Response seller = null, customer = null;
@@ -51,6 +56,7 @@ public class ChatRoomDto {
                     .seller(seller)
                     .customer(customer)
                     .product(product)
+                    .messages(chatRoom.getMessageList().stream().map(MessageDto.Response::of).collect(Collectors.toList()))
                     .build();
         }
     }
