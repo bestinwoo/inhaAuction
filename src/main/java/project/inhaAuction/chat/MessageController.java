@@ -44,4 +44,9 @@ public class MessageController {
         return ResponseEntity.ok(new Result<>(chatRoomService.getRoomList(memberId)));
     }
 
+    @GetMapping("/chat/room/{roomId}")
+    public ResponseEntity<BasicResponse> getChatRoomDetail(@PathVariable Long roomId) {
+        return ResponseEntity.ok(new Result<>(chatRoomService.getRoomDetail(roomId)));
+    }
+
 }

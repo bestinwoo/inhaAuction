@@ -38,7 +38,6 @@ public class ChatRoomDto {
         private MemberDto.Response seller;
         private MemberDto.Response customer;
         private ProductDto.Summary product;
-        private List<MessageDto.Response> messages;
 
         public static Response of(ChatRoom chatRoom) {
             MemberDto.Response seller = null, customer = null;
@@ -56,6 +55,24 @@ public class ChatRoomDto {
                     .seller(seller)
                     .customer(customer)
                     .product(product)
+                    .build();
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class Detail {
+        private Long id;
+        private MemberDto.Response seller;
+        private MemberDto.Response customer;
+        private List<MessageDto.Response> messages;
+
+        public static Detail of(ChatRoom chatRoom) {
+            return Detail.builder()
+                    .id(chatRoom.getId())
+                    .seller(MemberDto.Response.of(chatRoom.getSeller()))
+                    .customer(MemberDto.Response.of(chatRoom.getCustomer()))
                     .messages(chatRoom.getMessageList().stream().map(MessageDto.Response::of).collect(Collectors.toList()))
                     .build();
         }

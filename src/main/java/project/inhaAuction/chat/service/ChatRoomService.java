@@ -35,8 +35,9 @@ public class ChatRoomService {
     }
 
     @Transactional(readOnly = true)
-    public ChatRoomDto.Response getRoomDetail(Long roomId) {
-        Optional<ChatRoomDto.Response> room = chatRoomRepository.findById(roomId).map(ChatRoomDto.Response::of);
+    public ChatRoomDto.Detail getRoomDetail(Long roomId) {
+        Optional<ChatRoomDto.Detail> room = chatRoomRepository.findById(roomId).map(ChatRoomDto.Detail::of);
         return room.orElseThrow();
     }
+
 }
