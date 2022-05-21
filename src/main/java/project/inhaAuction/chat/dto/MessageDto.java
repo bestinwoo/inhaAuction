@@ -15,6 +15,7 @@ public class MessageDto {
     public static class Send {
         private String message;
         private Long senderId;
+        private Long receiverId;
         private Long roomId;
 
         public Message toMessage() {
@@ -22,6 +23,7 @@ public class MessageDto {
                     .message(message)
                     .sender(Member.builder().id(senderId).build())
                     .chatRoom(ChatRoom.builder().id(roomId).build())
+                    .receiver(Member.builder().id(receiverId).build())
                     .build();
         }
     }

@@ -12,6 +12,7 @@ import project.inhaAuction.chat.dto.MessageDto;
 import project.inhaAuction.chat.service.ChatRoomService;
 import project.inhaAuction.chat.service.MessageService;
 import project.inhaAuction.common.BasicResponse;
+import project.inhaAuction.common.ErrorResponse;
 import project.inhaAuction.common.Result;
 
 @RestController
@@ -25,13 +26,17 @@ public class MessageController {
     @MessageMapping("/chat/send")
     public void chat(MessageDto.Send message) {
         messageService.sendMessage(message);
-        messagingTemplate.convertAndSend("/topic/chat/" + message.getRoomId(), message);
+        messagingTemplate.convertAndSend("/topic/chat/" + message.getReceiverId(), message);
     }
 
     @PostMapping("/chat/room")
     public ResponseEntity<BasicResponse> JoinChatRoom(@RequestBody ChatRoomDto.Request dto) {
-        Long roomId = chatRoomService.joinChatRoom(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Result<>(roomId));
+        try {
+            Long roomId = chatRoomService.joinChatRoom(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new Result<>(roomId));
+        } catch(IllegalStateException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
+        }
     }
 
     @GetMapping("/chat/room")

@@ -17,7 +17,10 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
     @Transactional(rollbackFor = Exception.class)
-    public Long joinChatRoom(ChatRoomDto.Request dto) {
+    public Long joinChatRoom(ChatRoomDto.Request dto) throws IllegalStateException {
+        if(dto.getCustomerId().equals(dto.getSellerId())) {
+            throw new IllegalStateException("자신과의 채팅방은 만들 수 없습니다.");
+        }
         Optional<ChatRoom> chatRoom = chatRoomRepository.findByMemberAndProduct(dto.getCustomerId(), dto.getSellerId(), dto.getProductId());
         if(chatRoom.isPresent()) {
             return chatRoom.get().getId();

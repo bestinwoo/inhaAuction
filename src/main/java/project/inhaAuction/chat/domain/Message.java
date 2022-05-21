@@ -24,6 +24,10 @@ public class Message {
     private Member sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver_id")
+    private Member receiver;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private ChatRoom chatRoom;
 
