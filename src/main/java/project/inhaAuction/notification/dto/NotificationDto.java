@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import project.inhaAuction.auth.domain.Member;
+import project.inhaAuction.notification.NotificationType;
 import project.inhaAuction.notification.domain.Notification;
 
 import java.time.LocalDateTime;
@@ -14,13 +15,20 @@ public class NotificationDto {
     @Builder
     public static class Post {
         private String message;
-        private String type;
+        private NotificationType type;
         private Long receiverId;
+        private LocalDateTime publishDate;
+
+        public void setPublishDate(LocalDateTime publishDate) {
+            this.publishDate = publishDate;
+        }
 
         public Notification toNotification() {
             return Notification.builder()
                     .member(Member.builder().id(receiverId).build())
                     .message(message)
+                    .publishDate(publishDate)
+                    .viewYn(false)
                     .type(type)
                     .build();
         }
@@ -32,7 +40,7 @@ public class NotificationDto {
     public static class Response {
         private Long id;
         private String message;
-        private String type;
+        private NotificationType type;
         private LocalDateTime publishDate;
         private Boolean viewYn;
 

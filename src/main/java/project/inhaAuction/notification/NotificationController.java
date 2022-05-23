@@ -12,17 +12,17 @@ import project.inhaAuction.common.ErrorResponse;
 import project.inhaAuction.common.Result;
 import project.inhaAuction.notification.dto.NotificationDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/notification")
 @CrossOrigin
 public class NotificationController {
     private final NotificationService notificationService;
     private final SimpMessageSendingOperations messagingTemplate;
 
-    @PostMapping()
+    @PostMapping("/notification")
     public ResponseEntity<BasicResponse> sendNotification(@RequestBody NotificationDto.Post post) {
     //    try {
             notificationService.sendNotification(post);
@@ -32,7 +32,7 @@ public class NotificationController {
         }*/
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/notification/{id}")
     public ResponseEntity<BasicResponse> getNotifications(@PathVariable Long id)
     {
         try {
@@ -46,8 +46,26 @@ public class NotificationController {
         }
     }
 
-    @MessageMapping("/{id}")
-    public void message(@DestinationVariable("id") Long id) {
-        messagingTemplate.convertAndSend("/topic/" + id, "notify socket connection completed");
+    @MessageMapping("/notification/send")
+    public void message(NotificationDto.Post post) {
+        post.setPublishDate(LocalDateTime.now());
+        notificationService.sendNotification(post);
+        messagingTemplate.convertAndSend("/topic/notify/" + post.getReceiverId(), post);
+    }
+
+    @PostMapping("/notification/{id}")
+    public ResponseEntity<BasicResponse> viewCheck(@PathVariable Long id) {
+        try {
+            notificationService.viewCheck(id);
+            return ResponseEntity.ok(new Result<>("알림 읽음처리 완료"));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
+        }
+    }
+    
+    @DeleteMapping("/notification/{id}")
+    public ResponseEntity<BasicResponse> deleteNotification(@PathVariable Long id) {
+        notificationService.deleteNotification(id);
+        return ResponseEntity.ok(new Result<>("알림 삭제 완료"));
     }
 }

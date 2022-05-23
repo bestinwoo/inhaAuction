@@ -8,6 +8,7 @@ import project.inhaAuction.orders.domain.Orders;
 import project.inhaAuction.product.domain.Product;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class OrdersDto {
     @Getter
@@ -17,11 +18,17 @@ public class OrdersDto {
         private Long productId;
         private String productName;
         private Long successBidPrice;
+        private Long successBidderId;
         private LocalDateTime endDate;
         private Long instantPrice;
         private Long bidCnt;
 
         public static Sales of(Product product) {
+            Long successBidderId = null;
+            ;
+            if(product.getSuccessBidder() != null) {
+                successBidderId = product.getSuccessBidder().getId();
+            }
             return Sales.builder()
                     .productId(product.getId())
                     .productName(product.getName())
@@ -29,6 +36,7 @@ public class OrdersDto {
                     .endDate(product.getEndDate())
                     .instantPrice(product.getInstantPrice())
                     .bidCnt(product.getBidderCnt())
+                    .successBidderId(successBidderId)
                     .build();
         }
     }

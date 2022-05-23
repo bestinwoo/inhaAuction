@@ -34,16 +34,6 @@ public class AdminService {
         return memberRepository.getMemberCount(keyword);
     }
 
-//    @Transactional(rollbackFor = Exception.class)
-//    public void modifyMemberState(Long id, Role state) throws IllegalStateException {
-//        Optional<Member> member = memberRepository.findById(id);
-//        member.ifPresentOrElse(m -> {
-//            m.modifyState(state);
-//        }, () -> {
-//            throw new IllegalStateException("존재하지 않는 회원입니다.");
-//        });
-//    }
-
     @Transactional(rollbackFor = Exception.class)
     public void modifyMemberState(Map<Long, Role> map) throws IllegalStateException {
         for (Map.Entry<Long,Role> entry: map.entrySet()) {

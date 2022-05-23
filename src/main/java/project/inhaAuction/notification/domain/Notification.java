@@ -3,6 +3,7 @@ package project.inhaAuction.notification.domain;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import project.inhaAuction.auth.domain.Member;
+import project.inhaAuction.notification.NotificationType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,7 +19,9 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String message;
-    private String type;
+
+    @Enumerated(EnumType.STRING)
+    private NotificationType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -26,4 +29,8 @@ public class Notification {
 
     private boolean viewYn;
     private LocalDateTime publishDate;
+
+    public void setViewYn(boolean viewYn) {
+        this.viewYn = viewYn;
+    }
 }

@@ -22,13 +22,6 @@ public class NotificationService {
     @Transactional(rollbackFor = Exception.class)
     public void sendNotification(NotificationDto.Post post) throws IllegalStateException {
         Notification notification = post.toNotification();
-       /* Optional<Member> receiver = memberRepository.findById(post.getReceiverId());
-        receiver.ifPresentOrElse(m -> {
-            notification.setMember(m);
-        }, () -> {
-            throw new IllegalStateException("존재하지 않는 회원입니다.");
-        });*/
-
         notificationRepository.save(notification);
     }
 
@@ -40,6 +33,20 @@ public class NotificationService {
         List<Notification> notifications = notificationRepository.findByMemberId(memberId);
 
         return notifications.stream().map(NotificationDto.Response::of).collect(Collectors.toList());
+    }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void viewCheck(Long id) throws IllegalStateException{
+        Optional<Notification> notification = notificationRepository.find(id);
+        notification.ifPresentOrElse(n -> {
+            n.setViewYn(true);
+        }, () -> {
+            throw new IllegalStateException("존재하지 않는 알림입니다.");
+        });
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteNotification(Long id) {
+        notificationRepository.delete(id);
     }
 }
