@@ -18,9 +18,14 @@ public class NotificationDto {
         private NotificationType type;
         private Long receiverId;
         private LocalDateTime publishDate;
+        private Long id;
 
         public void setPublishDate(LocalDateTime publishDate) {
             this.publishDate = publishDate;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
         }
 
         public Notification toNotification() {

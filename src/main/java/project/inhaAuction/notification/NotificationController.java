@@ -49,7 +49,8 @@ public class NotificationController {
     @MessageMapping("/notification/send")
     public void message(NotificationDto.Post post) {
         post.setPublishDate(LocalDateTime.now());
-        notificationService.sendNotification(post);
+        Long notifyId = notificationService.sendNotification(post);
+        post.setId(notifyId);
         messagingTemplate.convertAndSend("/topic/notify/" + post.getReceiverId(), post);
     }
 

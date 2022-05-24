@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReviewService {
     private final ReviewRepository reviewRepository;
-
+    //TODO: 리뷰랑 구매현황 한개씩만
     @Transactional(rollbackFor = Exception.class)
     public ReviewDto.Response writeReview(ReviewDto.Write write) throws IllegalStateException {
         if(write.getWriterId().equals(write.getSellerId())) {

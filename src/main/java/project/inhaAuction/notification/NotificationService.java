@@ -20,9 +20,10 @@ public class NotificationService {
     private final MemberRepository memberRepository;
 
     @Transactional(rollbackFor = Exception.class)
-    public void sendNotification(NotificationDto.Post post) throws IllegalStateException {
+    public Long sendNotification(NotificationDto.Post post) throws IllegalStateException {
         Notification notification = post.toNotification();
         notificationRepository.save(notification);
+        return notification.getId();
     }
 
     @Transactional(readOnly = true)
