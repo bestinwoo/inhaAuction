@@ -32,4 +32,9 @@ public class Orders {
     private LocalDateTime orderDate;
 
     private Long bid;
+
+    public void updateBid(Long bid) {
+        this.bid = bid;
+        this.orderDate = LocalDateTime.now();
+    }
 }

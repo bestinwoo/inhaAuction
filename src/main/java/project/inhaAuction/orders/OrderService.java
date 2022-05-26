@@ -24,15 +24,7 @@ public class OrderService {
     //입찰
     @Transactional(rollbackFor = Exception.class)
     public OrdersDto.Request tenderForProduct(OrdersDto.Request orderDto) throws IllegalStateException {
-        //기존 입찰 내역이 있는지 확인
-        Optional<Orders> oldOrder = orderRepository.findByProductIdAndCustomerId(orderDto.getProductId(), orderDto.getCustomerId());
-        Orders newOrder = orderDto.toOrder();
-        oldOrder.ifPresent((m) -> {
-            if (orderDto.getBid() <= m.getBid()) { // 마지막 입찰 가격보다 낮은 가격으로 입찰할 시
-                throw new IllegalStateException("마지막 입찰 가격보다 낮은 가격으로는 입찰할 수 없습니다.");
-            }
-        });
-
+        //상품 상태 체크
         Optional<Product> product = productRepository.getProductDetail(orderDto.getProductId());
         product.ifPresentOrElse(p -> {
             if (p.getSeller().getId().equals(orderDto.getCustomerId())) {
@@ -53,8 +45,20 @@ public class OrderService {
             throw new IllegalStateException("해당 상품을 찾을 수 없습니다.");
         });
 
-        orderRepository.save(newOrder);
-        productRepository.increaseBidderCntById(orderDto.getProductId());
+        //기존 입찰 내역이 있는지 확인
+        Optional<Orders> oldOrder = orderRepository.findByProductIdAndCustomerId(orderDto.getProductId(), orderDto.getCustomerId());
+
+        oldOrder.ifPresentOrElse((m) -> {
+            if (orderDto.getBid() <= m.getBid()) { // 마지막 입찰 가격보다 낮은 가격으로 입찰할 시
+                throw new IllegalStateException("마지막 입찰 가격보다 낮은 가격으로는 입찰할 수 없습니다.");
+            }
+            m.updateBid(orderDto.getBid());
+        }, () -> {
+            Orders newOrder = orderDto.toOrder();
+            orderRepository.save(newOrder);
+            productRepository.increaseBidderCntById(orderDto.getProductId());
+        });
+
         return orderDto;
     }
 
