@@ -58,6 +58,9 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Integer getProductCount(String keyword, String categoryName) {
+        if (keyword != null) {
+            keyword = "%" + keyword + "%";
+        }
         return productRepository.getProductCount(keyword, categoryName);
     }
 

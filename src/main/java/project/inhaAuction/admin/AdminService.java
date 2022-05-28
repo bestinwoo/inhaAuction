@@ -31,6 +31,9 @@ public class AdminService {
 
     @Transactional(readOnly = true)
     public Integer getMembersCount(String keyword) {
+        if (keyword != null) {
+            keyword = "%" + keyword + "%";
+        }
         return memberRepository.getMemberCount(keyword);
     }
 
