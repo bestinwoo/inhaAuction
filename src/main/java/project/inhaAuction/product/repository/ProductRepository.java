@@ -17,7 +17,7 @@ public class ProductRepository {
         em.persist(product);
         return product;
     }
-    //TODO: 그리고 상위 카테고리 선택하면 하위카테고리까지 포함되게 가능?
+
     public List<Product> findByCategoryAndKeyword(String keyword, String categoryName, int page, int per_page) {
         return em.createQuery("select p from Product p where (:keyword is null or p.name like :keyword)" +
                         " and (:categoryName is null or p.category.name like :categoryName) order by p.successBid, p.endDate desc", Product.class)

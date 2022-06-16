@@ -1,6 +1,7 @@
 package project.inhaAuction.product.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +29,7 @@ public class ProductService {
         return results;
     }
 
-    @Transactional(rollbackFor = Exception.class) //TODO: 확장자 체크
+    @Transactional(rollbackFor = Exception.class)
     public ProductDto.Detail addProduct(ProductDto.Request productDto, List<MultipartFile> multipartFiles) throws IOException, IllegalStateException {
         if(multipartFiles == null) {
             throw new IllegalStateException("상품 이미지가 없습니다.");
@@ -38,6 +39,10 @@ public class ProductService {
         Product product = productDto.toProduct();
         productRepository.save(product);
         for (MultipartFile multipartFile : multipartFiles) {
+            if(!multipartFile.getContentType().contains("png")) {
+                productRepository.deleteById(product.getId());
+                throw new FileUploadException("파일 확장자는 png 파일만 업로드 가능합니다.");
+            }
             multipartFile.transferTo(new File("product", "product-" + product.getId().toString() + "-" + multipartFiles.indexOf(multipartFile) + ".png"));
         }
 

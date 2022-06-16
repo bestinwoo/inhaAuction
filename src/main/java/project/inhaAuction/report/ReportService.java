@@ -1,6 +1,7 @@
 package project.inhaAuction.report;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,9 @@ public class ReportService {
         Report report = write.toReport();
         reportRepository.save(report);
         for (MultipartFile file : files) {
+            if(!file.getContentType().contains("png")) {
+                throw new FileUploadException("파일 확장자는 png 파일만 업로드 가능합니다.");
+            }
             file.transferTo(new File("report", "report-" + report.getId().toString() + "-" + files.indexOf(file) + ".png"));
         }
     }

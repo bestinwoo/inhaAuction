@@ -32,7 +32,7 @@ public class ProductController {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(new Result<>(productService.addProduct(product, files)));
         } catch (IOException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("상품 사진 업로드 실패", "400"));
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), "400"));
         }

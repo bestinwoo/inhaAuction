@@ -1,6 +1,7 @@
 package project.inhaAuction.auth.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,10 +39,13 @@ public class AuthService {
         if(validateDuplicateMember(member)) {
             return false;
         }
-
         memberRepository.save(member);
 
         MultipartFile image = authRequest.getImage();
+        if(!image.getContentType().contains("png")) {
+            memberRepository.delete(member);
+            throw new FileUploadException("파일 확장자는 png 파일만 업로드 가능합니다.");
+        }
         image.transferTo(new File("auth", "member-" + member.getId().toString() + ".png"));
 
         return true;
@@ -72,7 +76,7 @@ public class AuthService {
     @Transactional(rollbackFor = Exception.class)
     public TokenDto login(LoginDto authRequest) throws IllegalStateException {
         UsernamePasswordAuthenticationToken authenticationToken = authRequest.toAuthentication();
-        //TODO: 왜 authRequest.toAuthentication은 loginId로 토큰을 만드는데 Long id값으로 authentication이 만들어 지는 것일까? 예상 : customUserDetailsService의 loadUsername에서 loginId로 유저를 찾아서 그런듯?
+        //왜 authRequest.toAuthentication은 loginId로 토큰을 만드는데 Long id값으로 authentication이 만들어 지는 것일까? 예상 : customUserDetailsService의 loadUsername에서 loginId로 유저를 찾아서 그런듯?
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         MemberDto.Response memberInfo = getMemberInfo(authRequest.getId());
         if(memberInfo.getBanDate() != null) {
